@@ -3,3 +3,8 @@
 Created React in frontend and Express in backend folders
 Using yarn in both and each has their own yarn.lock and package.json files
 git is set to the root folder MERN_Restaurant_App
+
+===Next Step===
+Add the React code to the frontend folder
+Once that is there you can start with Traversy Section 3: Video 13, around the 6:40 mark
+-it will involve getting the sample data from the front end and adding it to the backend
