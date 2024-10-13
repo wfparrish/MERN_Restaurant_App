@@ -1,0 +1,5 @@
+10/13/2024
+
+Created React in frontend and Express in backend folders
+Using yarn in both and each has their own yarn.lock and package.json files
+git is set to the root folder MERN_Restaurant_App
