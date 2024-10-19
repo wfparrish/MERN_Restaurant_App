@@ -95,5 +95,21 @@ This split in locations was how it worked before but is unexpected
 
 Migrated the React code to this setup
 
+Set up the README.md file with the link to the app
+CodeSandbox did something really interesting
+
+ChatGPT gave me the text for modifying the file in Github
+Over on Github I tell the user to go to http://localhost:3000
+
+But the README.md file inside CodeSandbox gives me this link: 
+zzsq5r-3000.csb.app
+with a little window icon beside it. When I click it a 2nd preview window loads in CodeSandbox!
+-this eliminates the problem of needing more monitor space
+
+Now both the frontend and the backend are running in their own Preview windows
+
+So I can use https://codesandbox.io/p/github/wfparrish/MERN_Restaurant_App/ and work on the app
+
+
 ===Next Step===
 Set up the backend to serve the data to the front end
