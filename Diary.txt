@@ -12,3 +12,20 @@ Once that is there you can start with Traversy Section 3: Video 13, around the 6
 To start either the front or the backend you need to have a terminal open in the frontend or backend folder respectively
 Then you run:
 npx yarn start
+
+****************************************************************************************
+
+10/19/2024
+
+Pulled the MERN_Restaurant_App repo into CodeSandbox
+-was able to set up and see the backend on 5000 and the frontend on 3000
+
+The React app on 3000 opens a new window in my browser
+The Express app opens up in a Preview window
+
+This split in locations was how it worked before but is unexpected
+-it may make working on the app more complex I have multiple windows to manage
+-it might be a good use of the portable monitor that I have
+
+===Next Step===
+Migrating the React code to this setup

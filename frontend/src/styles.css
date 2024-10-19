@@ -1,0 +1,299 @@
+/* General App styling */
+.App {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #f4f4f9;
+}
+
+/* Table styling */
+.Table {
+  text-align: center;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.seats {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Seat card styling */
+.Seat {
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  width: 300px;
+  text-align: left;
+}
+
+.Seat h2 {
+  margin-bottom: 10px;
+}
+
+/* Menu styling */
+.Menu {
+  margin-bottom: 20px;
+}
+
+/* FoodItem styling with visible borders */
+.food-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 15px;
+  border: 2px solid #ddd; /* Adding a visible border */
+  border-radius: 8px;
+  background-color: #fff; /* White background for food items */
+}
+
+.food-item img {
+  max-width: 100px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.food-item h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.food-item p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.food-item button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.food-item button:hover {
+  background-color: #45a049;
+}
+
+/* Order list styling */
+.Seat ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.Seat ul li {
+  font-size: 16px;
+  padding: 5px 0;
+}
+
+.Seat h3 {
+  margin-top: 10px;
+  color: #333;
+}
+
+/* Add styles for the dynamic layout */
+.seat-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.seat {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.current-order {
+  flex: 1;
+  border: 1px solid #ccc;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+button {
+  margin-bottom: 20px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+/* Back button styling inside CurrentOrder */
+.current-order {
+  border: 1px solid #ccc;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.back-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+/* Main container styles for the Table component */
+.Table {
+  font-family: Arial, sans-serif; /* Set a sans-serif font for readability */
+  margin: 20px; /* Add margin around the table for spacing */
+}
+
+/* Styles for the main heading (h1) */
+h1 {
+  text-align: center; /* Center the main heading */
+}
+
+/* Styles for the secondary heading (h2) */
+h2 {
+  text-align: center; /* Center the secondary heading */
+  margin-bottom: 20px; /* Add margin below the heading for spacing */
+}
+
+/* Container for the seat buttons */
+.seats {
+  display: flex; /* Use flexbox for horizontal layout */
+  justify-content: center; /* Center the buttons horizontally */
+  margin-bottom: 20px; /* Add margin below the buttons for spacing from the selected seat view */
+}
+
+/* Styles for individual seat buttons */
+.seats button {
+  margin: 0 10px; /* Add horizontal margin between buttons */
+  padding: 10px 20px; /* Add padding inside buttons for better touch area */
+  font-size: 16px; /* Set font size for button text */
+  border: 2px solid #007bff; /* Border color for buttons */
+  border-radius: 5px; /* Rounded corners for buttons */
+  background-color: #fff; /* Background color for buttons */
+  color: #007bff; /* Text color for buttons */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effects */
+}
+
+/* Styles for button hover effect */
+.seats button:hover {
+  background-color: #007bff; /* Change background color on hover */
+  color: #fff; /* Change text color on hover */
+}
+
+/* Styles for the currently selected seat view */
+.selected-seat {
+  padding: 20px; /* Add padding inside the selected seat card */
+  border: 2px solid #007bff; /* Border for the selected seat view */
+  border-radius: 10px; /* Rounded corners for the selected seat card */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect for depth */
+  margin-top: 20px; /* Add margin above for spacing from other elements */
+}
+
+/* Container for the table squares */
+.restaurant-map {
+  display: flex; /* Use flexbox to arrange children in a row */
+  flex-wrap: wrap; /* Allow wrapping if needed */
+  justify-content: center; /* Center the tables in the container */
+  margin-bottom: 20px; /* Add spacing below the tables */
+}
+
+/* Change background color on hover */
+.table-square:hover {
+  background-color: deepskyblue; /* Change color on hover */
+}
+
+/* Active table color */
+.table-square.selected {
+  background-color: lightblue; /* Active table color */
+  color: white; /* Text color for active table */
+}
+
+/* styles.css */
+
+/* Styles for the restaurant map */
+.restaurant-map {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 20px;
+}
+
+/* Styles for sectors */
+.sector {
+  background-color: lightgray; /* Light grey background */
+  padding: 20px; /* Padding inside the sector */
+  border-radius: 10px; /* Rounded corners */
+  margin: 20px; /* Margin around the sector */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.sector h3 {
+  text-align: center;
+}
+
+.sector-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Styles for table squares */
+.table-square {
+  width: 60px;
+  height: 60px;
+  background-color: white;
+  border: 2px solid #007bff;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: move; /* Indicate draggable */
+  transition: background-color 0.3s ease;
+  margin: 10px;
+}
+
+.table-square:hover {
+  background-color: deepskyblue;
+}
+
+.table-square.selected {
+  background-color: lightblue;
+  color: white;
+  border-color: #0056b3;
+}
+
+/* Styles when a table is being dragged */
+.table-square[style*="opacity: 0.5"] {
+  background-color: #aaa;
+}
+
+/* styles.css */
+
+/* Optional: Add background colors for visual separation */
+.restaurant-map > div:nth-child(1) {
+  background-color: #f0f0f0; /* Light grey background for the Sector */
+}
+
+.restaurant-map > div:nth-child(2) {
+  background-color: #fff; /* White background for the gap */
+}
+
+.restaurant-map > div:nth-child(3) {
+  background-color: #fafafa; /* Slightly off-white background for the Table */
+}
+
+/* Ensure the body and html elements take up full height */
+body,
+html,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
