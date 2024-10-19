@@ -1,10 +1,28 @@
-import express from 'express';
-const port = 5000;
+// index.js
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
 
 const app = express();
 
-app.get('/', (req, res) => {
-  res.send('API is running...');
-});
+// Middleware
+app.use(cors());
+app.use(express.json());
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+// Connect to MongoDB
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+// Routes
+const foodItemsRouter = require("./routes/foodItems");
+app.use("/api/food-items", foodItemsRouter);
+
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

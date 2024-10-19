@@ -110,6 +110,17 @@ Now both the frontend and the backend are running in their own Preview windows
 
 So I can use https://codesandbox.io/p/github/wfparrish/MERN_Restaurant_App/ and work on the app
 
+Ran:
+yarn add express mongoose cors dotenv
+yarn add --dev nodemon
+touch .env
+
+Opened .env and entered
+MONGO_URI=mongodb://localhost:27017/restaurant-app
+PORT=5000
+
+
+
 
 ===Next Step===
 Set up the backend to serve the data to the front end
