@@ -1,3 +1,69 @@
+10/12/2024
+
+The whole project is starting to take shape. Tables can now be repositioned inside a sector.
+I also added a new component, DraggableTableSquare, which is a table that can be dragged and dropped.
+I also fixed a bug where the table was not being rendered if the position was undefined.
+
+Next steps:
+- Add a way to add/remove tables
+- Add a way to select a table and see its details
+
+The project happened faster than I expected, with piece of code immediately suggesting themselves as I was adding more features.
+AI knew exactly what I was asking for and knew how to implement it. And since I knew the structure of what needed to be built once I started 
+with the UI first (holding dummy data), I was able to build the project in a few hours.
+
+At this point, we have the draggable tables working, and no errors in the Order calculations.
+
+Much of the questions that were answered were answered by either the AI in codesandbox or ChatGPT.
+This was started on 10/5/2024. This would have taken me a year to figure out on my own.
+
+It is time to start building the backend. I should start with the Order model, and then move on to the Sector model.
+I plan on using Express.js with Node.js. I'll have to research how to connect it to the frontend.
+
+I also need to add a way to save the data to the backend. I think I'll create an endpoint for each model.
+
+I also need to add a way to load the data from the backend. I'll have to figure out how to get the data from the database.
+I'll probably have to create an endpoint for each model. And then I'll have to figure out how to display the data in the frontend.
+MongoDB is probably the best choice for the database. And Mongoose would be the best choice for the ORM.
+
+Is Axios the best choice when using React? I'll have to research it.
+
+===Next Steps===
+Review the Brad Traversy MERN Stack tutorial. Use his code as a reference to build the backend and connect it to the frontend.
+The file system should mirror his setup, since I'll be using the same models/routes/controller boilerplate code. 
+
+This is the stucture recommended by ChatGPT for the folder structure:
+restaurant-app/
+├── backend/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── config/
+│   ├── app.js
+│   ├── package.json
+│   └── .env
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── ... other React files
+├── .gitignore
+└── README.md
+
+I want to see how close it matches the Traversy MERN Stack tutorial.
+But to build an entire frontend in React in a week is mindblowing that I got it done. AI is truly changing the world.
+
+The changes to the project are happening so fast I don't have a single source of truth for a Diary.txt file.
+And there wasn't time to slow down and write every little change and problem to look up. AI solves so many problems so fast.
+My job is to learn how to use AI to its fullest extent to build the project. And to look up things that are not related to AI.
+Like the syntax of Node.js, Express.js, MongoDB, Mongoose, etc. Or Vanilla JS, HTML, and CSS. Because AI is translating my requests into 
+React code without any errors. And now o1-mini just wrote an entire backend for me. models/routes/controllers/, Express server setup,
+MongoDB connection, etc. 
+
+
+
+
+
 10/13/2024
 
 Created React in frontend and Express in backend folders
@@ -27,5 +93,7 @@ This split in locations was how it worked before but is unexpected
 -it may make working on the app more complex I have multiple windows to manage
 -it might be a good use of the portable monitor that I have
 
+Migrated the React code to this setup
+
 ===Next Step===
-Migrating the React code to this setup
+Set up the backend to serve the data to the front end
