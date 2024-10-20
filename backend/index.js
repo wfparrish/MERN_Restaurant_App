@@ -1,8 +1,10 @@
 // index.js
-require("dotenv").config();
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
+import dotenv from "dotenv";
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+
+dotenv.config();
 
 const app = express();
 
@@ -12,16 +14,18 @@ app.use(express.json());
 
 // Connect to MongoDB
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Routes
-const foodItemsRouter = require("./routes/foodItems");
+import foodItemsRouter from "./routes/foodItems.js";
 app.use("/api/food-items", foodItemsRouter);
+
+// Define a default route to prevent "Cannot GET /" error
+app.get("/", (req, res) => {
+  res.send("Welcome to the Restaurant App API");
+});
 
 // Start the server
 const PORT = process.env.PORT || 5000;

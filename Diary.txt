@@ -116,8 +116,38 @@ yarn add --dev nodemon
 touch .env
 
 Opened .env and entered
-MONGO_URI=mongodb://localhost:27017/restaurant-app
+MONGO_URI=mongodb://localhost:27017/mern-restaurant-app
 PORT=5000
+
+Created models folder
+Created FoodItem.js
+-filled in the code for the schema
+
+Set the files up to use modules like the Traversy tutorial is using
+-ChatGPT supplied the code
+
+Set up MongoDB on the VM that CodeSandbox is using for this project
+sudo apt-get update
+sudo apt-get install -y mongodb
+ls -ld /data/db
+sudo mkdir -p /data/db
+sudo chown -R `id -u` /data/db //made the database accessible
+mongod --fork --logpath /var/log/mongodb.log //started the database
+yarn seed //seeded the mongo instance
+
+Ran mongo
+-opened the mongodb terminal, confirming mongodb is running
+
+Seeded the MongoDB database
+
+yarn dev
+-starts nodemon
+
+Nodemon starts the mongodb server when you run yarn dev
+Server is running on port 5000
+
+
+
 
 
 
