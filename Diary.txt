@@ -146,6 +146,13 @@ yarn dev
 Nodemon starts the mongodb server when you run yarn dev
 Server is running on port 5000
 
+Updated the Menu.js file to make API calls for the data
+
+It is working well, the data is clearly no longer in the frontend side 
+but it is working well
+
+Now we have a full stack MERN demo application
+
 
 
 

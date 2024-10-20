@@ -1,34 +1,49 @@
-// Menu.js
-import React from "react";
+// frontend/src/components/Menu.js
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import FoodItem from "./FoodItem";
 
-const foodItems = [
-  {
-    img: "/path/to/burger.png",
-    title: "Burger",
-    price: 3.89,
-    text: "Click Me!",
-  },
-  { img: "/path/to/fries.png", title: "Fries", price: 1.99, text: "Click Me!" },
-  {
-    img: "/path/to/shakes.png",
-    title: "Shakes",
-    price: 2.99,
-    text: "Click Me!",
-  },
-];
-
 function Menu({ addToOrder }) {
+  const [foodItems, setFoodItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchFoodItems = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/food-items"
+        );
+        setFoodItems(response.data);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching food items:", err);
+        setError("Failed to load food items");
+        setLoading(false);
+      }
+    };
+
+    fetchFoodItems();
+  }, []);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
+
   return (
     <div className="Menu">
-      {foodItems.map((item, index) => (
+      {foodItems.map((item) => (
         <FoodItem
-          key={index}
+          key={item._id}
           img={item.img}
           title={item.title}
           price={item.price}
           text={item.text}
-          onAddToOrder={() => addToOrder(item)} // Pass the item to the addToOrder function
+          onAddToOrder={() => addToOrder(item)}
         />
       ))}
     </div>
