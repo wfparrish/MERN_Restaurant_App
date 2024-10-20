@@ -153,8 +153,15 @@ but it is working well
 
 Now we have a full stack MERN demo application
 
+Now that the server is running and connected to MongoDB, 
+you can test your API endpoints, such as /api/food-items, 
+to ensure that your application is working properly.
 
+https://zzsq5r-5000.csb.app/api/food-items
 
+[{"_id":"6714478e9ee8edc6af47ced5","img":"/path/to/burger.png","title":"Burger","price":3.89,"text":"Click Me!","__v":0},
+{"_id":"6714478e9ee8edc6af47ced6","img":"/path/to/fries.png","title":"Fries","price":1.99,"text":"Click Me!","__v":0},
+{"_id":"6714478e9ee8edc6af47ced7","img":"/path/to/shakes.png","title":"Shakes","price":2.99,"text":"Click Me!","__v":0}]
 
 
 
