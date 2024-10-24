@@ -1,6 +1,7 @@
 // Table.js
 import React, { useState } from "react";
 import Seat from "./Seat";
+import TableBill from "./TableBill"; // Import the TableBill component
 
 function Table({
   tableIndex,
@@ -18,10 +19,7 @@ function Table({
   return (
     <div
       className="table-content"
-      style={{
-        padding: "20px",
-        boxSizing: "border-box",
-      }}
+      style={{ padding: "20px", boxSizing: "border-box" }}
     >
       {/* Optional: Include a button to deselect the table */}
       {/* <button onClick={closeTable}>Deselect Table</button> */}
@@ -36,6 +34,8 @@ function Table({
               </button>
             ))}
           </div>
+          {/* Include the TableBill component here */}
+          <TableBill orders={orders} />
         </>
       ) : (
         <div className="selected-seat">
