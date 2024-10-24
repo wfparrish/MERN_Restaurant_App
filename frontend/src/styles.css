@@ -297,3 +297,82 @@ html,
   padding: 0;
   height: 100%;
 }
+
+/* Container for the table bill, providing margin at the top to create spacing from the preceding elements,
+   and adding a blue border similar to the Seat buttons */
+.table-bill {
+  margin-top: 20px;
+  border: 2px solid #007bff; /* Adds a blue border */
+  padding: 10px; /* Adds padding inside the border for better spacing */
+  border-radius: 5px; /* Rounds the corners for a more refined look */
+}
+
+/* Styling for the "Table Bill" header, adding space below it for better visual separation from the content */
+.table-bill h2 {
+  margin-bottom: 10px;
+}
+
+/* Styling the list of items ordered at the table. 
+     Removing default padding and bullet points for a cleaner look */
+.table-bill ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Adding margin between each item in the list for clearer separation */
+.table-bill li {
+  margin-bottom: 5px;
+}
+
+/* Styling for the "Total Amount" heading, adding space above it to separate it from the list */
+.table-bill h3 {
+  margin-top: 15px;
+}
+
+/* Container for the table bill */
+.table-bill {
+  margin-top: 20px;
+  border: 2px solid #007bff;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* Styling for the "Table Bill" header */
+.table-bill h2 {
+  margin-bottom: 10px;
+}
+
+/* Remove bullet points and padding from the list */
+.table-bill ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Add margin between each item in the list */
+.table-bill li {
+  margin-bottom: 5px;
+  transition: color 0.3s ease; /* Smooth transition for color change */
+}
+
+/* Styling for the "Total Amount" heading */
+.table-bill h3 {
+  margin-top: 15px;
+}
+
+/* Styling for the "Place Order" button */
+.place-order-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+/* Button hover effect */
+.place-order-btn:hover {
+  background-color: #0056b3;
+}
