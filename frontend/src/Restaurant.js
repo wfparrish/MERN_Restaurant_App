@@ -48,17 +48,18 @@ function RestaurantMap() {
           Array.from({ length: seatsPerTable }, () => [])
         );
 
-        ordersResponse.data.forEach(({ tableIndex, seatIndex, items }) => {
-          if (
-            typeof tableIndex === 'number' &&
-            typeof seatIndex === 'number' &&
-            Array.isArray(items)
-          ) {
-            ordersData[tableIndex][seatIndex] = items;
+        ordersResponse.data.forEach(({ tableIndex, seats }) => {
+          if (typeof tableIndex === 'number' && Array.isArray(seats)) {
+            seats.forEach(({ seatIndex, items }) => {
+              if (typeof seatIndex === 'number' && Array.isArray(items)) {
+                ordersData[tableIndex][seatIndex] = items;
+              }
+            });
           }
         });
 
         setOrders(ordersData);
+
         setLoading(false);
       } catch (err) {
         console.error('Error fetching initial data:', err);
@@ -109,6 +110,60 @@ function RestaurantMap() {
     });
   };
 
+  /**
+   * Resets all table positions to their default starting points.
+   */
+  const resetTablePositions = async () => {
+    const confirmReset = window.confirm(
+      "Are you sure you want to reset all table positions to default?"
+    );
+    if (!confirmReset) return;
+
+    try {
+      const response = await axios.put("http://localhost:5000/api/table-positions/reset");
+      const { positions } = response.data;
+
+      // Transform the positions array into an object
+      const positionsObj = {};
+      positions.forEach(({ tableIndex, x, y }) => {
+        positionsObj[tableIndex] = { x, y };
+      });
+
+      setTablePositions(positionsObj);
+
+      console.log("All table positions have been reset to default.");
+    } catch (err) {
+      console.error("Error resetting table positions:", err);
+      alert("Failed to reset table positions. Please try again.");
+    }
+  };
+
+  /**
+   * Clears all orders by resetting items and total for each table.
+   */
+  const clearAllOrders = async () => {
+    const confirmClear = window.confirm(
+      "Are you sure you want to clear all orders?"
+    );
+    if (!confirmClear) return;
+
+    try {
+      // Reset the orders state
+      const clearedOrders = Array.from({ length: numberOfTables }, () =>
+        Array.from({ length: seatsPerTable }, () => [])
+      );
+      setOrders(clearedOrders);
+
+      // Send the cleared orders to the backend
+      await axios.put("http://localhost:5000/api/orders/clear-all");
+
+      console.log("All orders have been cleared.");
+    } catch (err) {
+      console.error("Error clearing orders:", err);
+      alert("Failed to clear orders. Please try again.");
+    }
+  };
+
   if (loading) {
     return (
       <div style={{ padding: '20px' }}>
@@ -133,6 +188,7 @@ function RestaurantMap() {
           flex: '0 0 50%',
           borderRight: '1px solid #ccc',
           boxSizing: 'border-box',
+          position: 'relative',
         }}
       >
         <Sector
@@ -142,6 +198,44 @@ function RestaurantMap() {
           tablePositions={tablePositions}
           onTablePositionChange={handleTablePositionChange}
         />
+        {/* Control Panel */}
+        <div
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            display: "flex",
+            gap: "10px",
+          }}
+        >
+          <button
+            onClick={resetTablePositions}
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#ff4d4d",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Reset Table Positions
+          </button>
+
+          <button
+            onClick={clearAllOrders}
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#4CAF50",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Clear All Orders
+          </button>
+        </div>
       </div>
 
       {/* Right side: Table details */}
