@@ -185,5 +185,18 @@ yarn seed
 frontend
 yarn start
 
+----------------------------------------------------------------------------------------
+
+10/25/2024
+
+Made the necessary changes to file structure and code that the tables can now be repositioned 
+and still retain state of the orders without issue.
+
+I added two buttons
+-one to reset tables to their default positions
+-one to clear all orders, essentially setting the table bill to $0
+
+It is all going too fast to track monotonously, the code modifies before I have time to think
+
 
 
