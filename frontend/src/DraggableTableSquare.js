@@ -41,7 +41,7 @@ function DraggableTableSquare({
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [isDragging, position]);
+  }, [isDragging, position, tableIndex, onPositionChange]);
 
   return (
     <div

@@ -168,3 +168,22 @@ https://zzsq5r-5000.csb.app/api/food-items
 
 ===Next Step===
 Set up the backend to serve the data to the front end
+
+----------------------------------------------------------------------------------------
+
+10/24/2024
+
+Going to have to use the desktop running VSCode as the single source of truth for github
+
+Remember you need to seed your data
+
+backend
+mongod
+yarn dev
+yarn seed
+
+frontend
+yarn start
+
+
+
