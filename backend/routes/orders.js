@@ -4,6 +4,20 @@ import Order from '../models/Order.js';
 
 const router = express.Router();
 
+// **New Clear All Orders Endpoint**
+// PUT /api/orders/clear-all
+router.put('/clear-all', async (req, res) => {
+  try {
+    // Remove all orders from the collection
+    await Order.deleteMany({});
+
+    res.status(200).json({ message: "All orders have been cleared." });
+  } catch (err) {
+    console.error("Error clearing orders:", err);
+    res.status(500).json({ message: "Server error. Failed to clear orders." });
+  }
+});
+
 // Get all orders
 router.get('/', async (req, res) => {
   try {
@@ -42,18 +56,6 @@ router.put('/:tableIndex/:seatIndex', async (req, res) => {
   }
 });
 
-// **New Clear All Orders Endpoint**
-// PUT /api/orders/clear-all
-router.put('/clear-all', async (req, res) => {
-  try {
-    // Remove all orders from the collection
-    await Order.deleteMany({});
 
-    res.status(200).json({ message: "All orders have been cleared." });
-  } catch (err) {
-    console.error("Error clearing orders:", err);
-    res.status(500).json({ message: "Server error. Failed to clear orders." });
-  }
-});
 
 export default router;

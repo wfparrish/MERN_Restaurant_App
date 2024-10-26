@@ -42,19 +42,21 @@ function RestaurantMap() {
 
         // Fetch orders
         const ordersResponse = await axios.get('http://localhost:5000/api/orders');
+        console.log('Orders Response:', ordersResponse.data); // For debugging
 
         // Initialize orders array
         const ordersData = Array.from({ length: numberOfTables }, () =>
           Array.from({ length: seatsPerTable }, () => [])
         );
 
-        ordersResponse.data.forEach(({ tableIndex, seats }) => {
-          if (typeof tableIndex === 'number' && Array.isArray(seats)) {
-            seats.forEach(({ seatIndex, items }) => {
-              if (typeof seatIndex === 'number' && Array.isArray(items)) {
-                ordersData[tableIndex][seatIndex] = items;
-              }
-            });
+        // Correctly process the fetched orders
+        ordersResponse.data.forEach(({ tableIndex, seatIndex, items }) => {
+          if (
+            typeof tableIndex === 'number' &&
+            typeof seatIndex === 'number' &&
+            Array.isArray(items)
+          ) {
+            ordersData[tableIndex][seatIndex] = items;
           }
         });
 
