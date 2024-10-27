@@ -1,4 +1,6 @@
+// TableBill.js
 import React, { useState } from "react";
+import "./styles.css"; // Ensure the correct path based on your project structure
 
 function TableBill({ orders }) {
   const [placedItems, setPlacedItems] = useState([]); // Track items that have been placed
@@ -23,16 +25,21 @@ function TableBill({ orders }) {
       {allItems.length > 0 ? (
         <>
           <ul>
-            {allItems.map((item, index) => (
-              <li
-                key={index}
-                style={{
-                  color: placedItems.includes(item) ? "#007bff" : "black", // Apply color based on placement status
-                }}
-              >
-                {item.title} - ${item.price.toFixed(2)}
-              </li>
-            ))}
+            {allItems.map((item, index) => {
+              const isPlaced = placedItems.includes(item);
+              return (
+                <li
+                  key={index}
+                  className={isPlaced ? "placed" : ""}
+                  onClick={() => {
+                    // Optional: Handle item click if needed
+                    console.log(`Clicked on item: ${item.title}`);
+                  }}
+                >
+                  {item.title} - ${item.price.toFixed(2)}
+                </li>
+              );
+            })}
           </ul>
           <h3>Total Amount: ${totalAmount}</h3>
           <button onClick={placeOrder} className="place-order-btn">
