@@ -1,4 +1,4 @@
-import RestaurantMap from "./Restaurant";
+import RestaurantMap from "./RestaurantMap";
 import "./styles.css";
 import Table from "./Table";
 
