@@ -175,14 +175,28 @@ Set up the backend to serve the data to the front end
 
 Going to have to use the desktop running VSCode as the single source of truth for github
 
+Remember to start you need to select the cmd terminal in your TERMINAL options list
+For some reason VSCode defaults to Powershell instead of CMD, which causes errors when you try to run the startup commands
+
+And remember you have two package.json files
+one for frontend
+one for backend
+You need to be in separate terminals in their frontend and backend folders to run these commands
+And any updates that require downloads you need to be in the correct frontend or backend folder
+
 Remember you need to seed your data
 
-backend
+*******************************
+Commands to start your servers:
+
+*******************************
+
+in the \backend folder
 mongod
 yarn dev
 yarn seed
 
-frontend
+in the \frontend folder
 yarn start
 
 ----------------------------------------------------------------------------------------
@@ -197,6 +211,18 @@ I added two buttons
 -one to clear all orders, essentially setting the table bill to $0
 
 It is all going too fast to track monotonously, the code modifies before I have time to think
+
+----------------------------------------------------------------------------------------
+
+10/31
+
+Successfully added code to allow the deletion of items by clicking on them in TableBill
+
+Mow the application has the basics of CRUD
+
+Purchased two Hikvision cameras and a Netgear 5port switch
+-I am going to swing over to adding streaming cameras to the application
+-When you click on a table you will see the table's camera window switch to the view of the camera assigned to the table
 
 
 

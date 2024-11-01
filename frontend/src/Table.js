@@ -1,13 +1,14 @@
 // Table.js
 import React, { useState } from "react";
 import Seat from "./Seat";
-import TableBill from "./TableBill"; // Import the TableBill component
+import TableBill from "./TableBill";
 
 function Table({
   tableIndex,
   orders,
   updateOrder,
-  closeTable, // Optional: use if you want a button to deselect the table
+  removeFromOrder,
+  closeTable,
 }) {
   const numberOfSeats = 4;
   const [selectedSeat, setSelectedSeat] = useState(null);
@@ -21,8 +22,6 @@ function Table({
       className="table-content"
       style={{ padding: "20px", boxSizing: "border-box" }}
     >
-      {/* Optional: Include a button to deselect the table */}
-      {/* <button onClick={closeTable}>Deselect Table</button> */}
       <h1>Table {tableIndex + 1}</h1>
       {selectedSeat === null ? (
         <>
@@ -34,8 +33,13 @@ function Table({
               </button>
             ))}
           </div>
-          {/* Include the TableBill component here */}
-          <TableBill orders={orders} />
+          {/* Pass the removeFromOrder to TableBill */}
+          <TableBill
+            orders={orders}
+            removeFromOrder={(seatIndex, itemIndex) =>
+              removeFromOrder(tableIndex, seatIndex, itemIndex)
+            }
+          />
         </>
       ) : (
         <div className="selected-seat">

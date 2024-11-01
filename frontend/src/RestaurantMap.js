@@ -9,11 +9,13 @@ function RestaurantMap() {
   const seatsPerTable = 4; // Assuming 4 seats per table
 
   const [selectedTable, setSelectedTable] = useState(null);
+
   const [orders, setOrders] = useState(
     Array.from({ length: numberOfTables }, () =>
       Array.from({ length: seatsPerTable }, () => [])
     )
   );
+
   const [tablePositions, setTablePositions] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -112,6 +114,45 @@ function RestaurantMap() {
     });
   };
 
+  const removeFromOrder = (tableIndex, seatIndex, itemIndex) => {
+    setOrders((prevOrders) => {
+      const newOrders = [...prevOrders];
+
+      // Debugging logs
+      console.log(`Table Index: ${tableIndex}`);
+      console.log(`Seat Index: ${seatIndex}`);
+      console.log('newOrders:', newOrders);
+      console.log('newOrders[tableIndex]:', newOrders[tableIndex]);
+      console.log('newOrders[tableIndex][seatIndex]:', newOrders[tableIndex]?.[seatIndex]);
+
+      // Ensure that the specific table and seat orders are defined
+      if (!newOrders[tableIndex] || !newOrders[tableIndex][seatIndex]) {
+        console.error('Table or seat order is undefined.');
+        return prevOrders; // Return previous state if undefined
+      }
+
+      newOrders[tableIndex] = [...newOrders[tableIndex]]; // Copy the table array
+      newOrders[tableIndex][seatIndex] = newOrders[tableIndex][seatIndex].filter(
+        (_, index) => index !== itemIndex
+      );
+
+      // Save the updated order to the backend using the updated array
+      axios
+        .put(`http://localhost:5000/api/orders/${tableIndex}/${seatIndex}`, {
+          items: newOrders[tableIndex][seatIndex],
+        })
+        .then((response) => {
+          console.log('Order updated:', response.data);
+        })
+        .catch((err) => {
+          console.error('Error updating order:', err);
+        });
+
+      return newOrders;
+    });
+  };
+
+
   /**
    * Resets all table positions to their default starting points.
    */
@@ -184,7 +225,6 @@ function RestaurantMap() {
 
   return (
     <div className="restaurant-map" style={{ display: 'flex', height: '100vh' }}>
-      {/* Left side: Sector */}
       <div
         style={{
           flex: '0 0 50%',
@@ -200,7 +240,6 @@ function RestaurantMap() {
           tablePositions={tablePositions}
           onTablePositionChange={handleTablePositionChange}
         />
-        {/* Control Panel */}
         <div
           style={{
             position: "absolute",
@@ -240,7 +279,6 @@ function RestaurantMap() {
         </div>
       </div>
 
-      {/* Right side: Table details */}
       <div
         style={{
           flex: '0 0 50%',
@@ -253,6 +291,7 @@ function RestaurantMap() {
             tableIndex={selectedTable}
             orders={orders[selectedTable] || Array.from({ length: seatsPerTable }, () => [])}
             updateOrder={updateOrder}
+            removeFromOrder={removeFromOrder} // Pass the remove function to Table
             closeTable={() => setSelectedTable(null)}
           />
         ) : (
