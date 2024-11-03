@@ -239,3 +239,9 @@ https://dev.to/qobi/how-to-display-ip-camera-feed-from-an-rtsp-url-onto-react-ap
 ChatGPT also proposed I use the backend for communicating with the Python 
 server that is going to handle the AI functionality.
 
+-------------------------------------------------------------------------------------------
+
+11/3
+
+Added static images of burger, fries, and shakes to the frontend/public/images folder
+
