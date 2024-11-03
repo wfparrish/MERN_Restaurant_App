@@ -1,3 +1,6 @@
+Sidenote: Presenting this to management, create a business analysis of this software 
+and the market you would like to target. 
+
 10/12/2024
 
 The whole project is starting to take shape. Tables can now be repositioned inside a sector.
@@ -224,5 +227,15 @@ Purchased two Hikvision cameras and a Netgear 5port switch
 -I am going to swing over to adding streaming cameras to the application
 -When you click on a table you will see the table's camera window switch to the view of the camera assigned to the table
 
+-------------------------------------------------------------------------------------------
 
+11/1
+
+Investigating how to add video using the Hikvision cameras to the Restaurant app
+
+ChatGPT supplied this link:
+https://dev.to/qobi/how-to-display-ip-camera-feed-from-an-rtsp-url-onto-react-app-page-with-node-js-516l
+
+ChatGPT also proposed I use the backend for communicating with the Python 
+server that is going to handle the AI functionality.
 
