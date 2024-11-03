@@ -424,3 +424,10 @@ html,
 .table-bill .place-order-btn:hover {
   background-color: #218838; /* Darker green on hover */
 }
+
+/* frontend/src/components/FoodItem.css */
+.food-item-img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover; /* Maintains aspect ratio and fills the 100x100 box */
+}

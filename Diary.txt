@@ -196,11 +196,11 @@ Commands to start your servers:
 
 in the \backend folder
 mongod
-yarn dev
-yarn seed
+npx yarn dev
+npx yarn seed
 
 in the \frontend folder
-yarn start
+npx yarn start
 
 ----------------------------------------------------------------------------------------
 
