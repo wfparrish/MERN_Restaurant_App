@@ -245,3 +245,91 @@ server that is going to handle the AI functionality.
 
 Added static images of burger, fries, and shakes to the frontend/public/images folder
 
+--------------------------------------------------------------------------------------------
+
+11/5
+
+Cameras and PoE switch arrived, reviewing this video:
+Walkthrough: How to stream IP Camera RTSP stream into browser as HLS via NodeJS, FFMPEG and ReactJS
+https://www.youtube.com/watch?v=Acmng0FHHqI
+
+He referenced an earlier video in his channel, found this:
+Demo (part 1): How to stream ip camera rtsp data into browser using ffmpeg, nodejs and hlsjs
+https://www.youtube.com/watch?v=-a5MAaEaizU
+
+Demo (part 2): How to stream ip camera rtsp data into browser over internet using nodejs and hlsjs
+https://www.youtube.com/watch?v=fmLagxRhfpM
+
+----------------------------------------------------------------------------------------------------------
+
+11/6
+
+Kensington was using the APIPA settings
+
+
+To update the Kensington and assign a static IP address that could communicate with the cameras, I had to do this:
+
+The connection is found in "Control Panel" > "Network and Sharing Center
+It has the name Cypress GX3 Superspeed to Gigabit
+
+If I need to change back because of some unknown issue, all I need to do is right click on that connection
+Go to IPv4 configurations and switch back to DHCP
+-that is where it usually is
+-the Kensington should go back to using an APIPA address assigned by DHCP
+
+This was the solution so that the camera is on the same network as the Kensington and the laptop
+If you're still getting the error:
+
+Alternative Method: You can use the Network and Sharing Center in Windows to assign a static IP address. Here's how:
+Open Network and Sharing Center: Go to "Control Panel" > "Network and Sharing Center."
+Change Adapter Settings: Click on "Change adapter settings" in the left sidebar.
+Right-Click Adapter: Right-click the Ethernet adapter that corresponds to the Kensington dock.
+Properties: Select "Properties."
+Internet Protocol Version 4 (TCP/IPv4): Select this option from the list.
+Properties: Click "Properties."
+Static IP: Select "Use the following IP address" and enter the static IP address (192.168.1.2), subnet mask (255.255.255.0), and default gateway (192.168.1.1).
+OK: Click "OK" to save the changes.
+
+I can now ping the camera on 192.168.1.64, and I can see the camera's GUI in the browser
+
+I couldn't see the Live View inside the GUI
+I had to use IE, Chrome and Edge won't present the image
+
+**********************************************************************
+
+Returned to the Youtube tutorial
+RTSP Webcam to HLS Live Streaming using FFMPEG and XAMPP | PART 1
+https://www.youtube.com/watch?v=rgWVm_j3llo
+
+Checking to see if I can see the camera in VLC
+https://supportusa.hikvision.com/support/solutions/articles/17000129064-how-do-i-get-my-rtsp-stream-
+
+Downloaded VLC player
+Opened Media > Open Network Stream
+rtsp://192.168.1.64:554/Streaming/channels/101
+
+I can see the camera view in the VLC player
+
+---------------------------------------------------------------------------------------------------
+
+11/7
+
+Today the Kensington won't show link or activity on the Ethernet port
+-I think the port is dead, the my desktop shows the activity
+-I think that because the option to configure the network in Control Panel was gone. and the port never lit up.
+
+Also the port on the switch wouldn't light up which was interesting
+-if one side is down both sides are down
+
+Found out that the switch only handle Fast Ethernet (100Mbps)
+-this is why the port on the desktop is showing an amber light for link
+
+The problem at home is getting a connection once I set a static IP address on the desktop
+I can set the IP, netmask, and gateway just like at work, with no Kensington in the middle
+-but the connection never works, I can't ping the camera
+
+Why I can't ping the camera I don't know
+-I could at work for one day, before the Kensington's port died
+
+But the PC isn't playing nice, even when you set a static IP
+
