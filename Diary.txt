@@ -371,7 +371,7 @@ Missing notes summary
 
 I couldn't connect to the switch again from the desktop, the ethernet port was showing two amber lights
 
-I needed to by a USB to Ethernet adapter and run it to the switch
+I needed to buy a USB to Ethernet adapter and run it to the switch
 Then I was able to create a connection again
 
 Also, there was a firewall rule to block communication 
