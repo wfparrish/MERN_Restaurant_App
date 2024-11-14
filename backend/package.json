@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
+    "dev": "rmdir /s /q streams && mkdir streams && nodemon index.js",
     "seed": "node scripts/seed.js"
   },
   "keywords": [],

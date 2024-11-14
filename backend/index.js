@@ -57,10 +57,18 @@ const tableToCameraMap = {
   1: 'CAMERA_URL_1',
   2: 'CAMERA_URL_1',
   3: 'CAMERA_URL_1',
-  4: 'CAMERA_URL_2',
-  5: 'CAMERA_URL_2',
-  6: 'CAMERA_URL_2',
-  7: 'CAMERA_URL_2',
+  4: 'CAMERA_URL_1',
+  5: 'CAMERA_URL_1',
+  6: 'CAMERA_URL_1',
+  7: 'CAMERA_URL_1',
+  8: 'CAMERA_URL_2',
+  9: 'CAMERA_URL_2',
+  10: 'CAMERA_URL_2',
+  11: 'CAMERA_URL_2',
+  12: 'CAMERA_URL_2',
+  13: 'CAMERA_URL_2',
+  14: 'CAMERA_URL_2',
+  15: 'CAMERA_URL_2'
   // Add more mappings if you have more cameras
   // For tables without cameras, you can omit them or map to null
 };
