@@ -409,3 +409,32 @@ https://chatgpt.com/c/67351f98-84a0-8002-8801-6ae4cea89b71
 https://chatgpt.com/c/67352625-0e14-8002-a057-4e85614412f8
 https://chatgpt.com/c/67350e59-d4ac-8002-9970-6572805c2ec2
 https://chatgpt.com/c/6734e32f-45e8-8002-84e9-8f8dfd92fd2d
+
+---------------------------------------------------------------------------------------------------------
+
+11/14
+
+I added a command to the package.json file on the backend to remove the hls files that get created each time the app is run 
+backend/streams holds those files
+
+"scripts": {
+  "start": "rm -rf backend/streams/* && nodemon backend/index.js"
+}
+
+************************************************************************************************
+
+The way the app works, a camera doesn't get triggered to start streaming until the first time you select a table connected to the camera
+This creates a long wait for the image to first start to load in the window
+
+I think the streaming should start the when the app starts to load.
+
+I will also have to pick a new streaming protocol and change how the app works
+-hls plays recordings, it doesn't stream live 
+
+ChatGPT said:
+"For a truly live experience without the play button, exploring WebRTC or RTMP as alternative streaming protocols might be your best option. 
+HLS is excellent for many live-streaming applications but does have its limits in achieving true real-time streaming."
+
+===Next Step===
+Set up the streams so that they load the moment the app starts to open in preparation for a table being selected.
+See what using WebRTC or RTMP would look like
