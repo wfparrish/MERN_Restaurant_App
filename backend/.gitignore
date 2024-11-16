@@ -1,1 +1,6 @@
+# ignore the .env file
 .env
+
+# ignore the streams file for hls: .m3u8 and .ts
+streams/*.m3u8
+streams/*.ts
