@@ -20,6 +20,24 @@ function RestaurantMap() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // ***** Example staff evaluation data ******
+  // A hacky fix for the presentation of the concept of AI-driven metrics
+  // Will push these values server side and call them with each table selected
+  const staffEvaluation = {
+    condiments_ontable: 1,                  // boolean-like
+    table_greeted_with_water: 1,            // boolean-like
+    water_refills: 0,                       // boolean-like
+    order_taken_with_tablet: 1,             // boolean-like
+    prebussing_occurred: 0,                 // boolean-like
+    time_spent_at_table: 12,                // numeric (minutes)
+    time_until_first_appetizer_arrive: 5,   // numeric (minutes)
+    time_until_first_drink_arrive: 2,       // numeric (minutes)
+    time_until_entree_arrive: 15,           // numeric (minutes)
+    time_until_dessert_arrive: 25,          // numeric (minutes)
+    time_between_last_ring_and_check_presentation: 8, // numeric (minutes)
+    dessert_menu_offered: 1,                // boolean-like
+  };
+
   // Fetch table positions and orders when component mounts
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -239,6 +257,7 @@ function RestaurantMap() {
           numberOfTables={numberOfTables}
           tablePositions={tablePositions}
           onTablePositionChange={handleTablePositionChange}
+          staffEvaluation={staffEvaluation}
         />
         <div
           style={{
