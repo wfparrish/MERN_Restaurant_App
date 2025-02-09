@@ -1,4 +1,3 @@
-// Sector.js
 import React from "react";
 import DraggableTableSquare from "./DraggableTableSquare";
 import StaffStats from "./StaffStats";
@@ -22,13 +21,14 @@ function Sector({
         boxSizing: "border-box",
       }}
     >
-      {/* Top half: Draggable tables */}
+      {/* Top portion: Draggable tables */}
       <div
         style={{
-          flex: 1, // This takes half when combined with bottom half
-          borderBottom: "2px solid #ccc", // Visual separation
+          flex: 1,
+          maxHeight: "70%", // Restrict this section to 70% of the height
+          borderBottom: "2px solid #ccc",
           position: "relative",
-          overflow: "auto", // scroll if needed
+          overflow: "auto", // Enable scrolling if needed
         }}
       >
         {Array.from({ length: numberOfTables }, (_, index) => {
@@ -45,15 +45,17 @@ function Sector({
         })}
       </div>
 
-      {/* Bottom half: Staff Stats */}
+      {/* Bottom portion: Staff Stats */}
       <div
         style={{
-          flex: 1, // This is the other half
+          flex: 1,
+          maxHeight: "30%", // Ensures StaffStats does not exceed 30% of Sector height
           backgroundColor: "#f9f9f9",
-          display: "flex",  // if you want to center something
+          display: "flex",
           flexDirection: "column",
           justifyContent: "flex-start",
           alignItems: "stretch",
+          overflow: "auto", // Enable scrolling if content overflows
         }}
       >
         <StaffStats employeeName="William" staffEvaluation={staffEvaluation} />
