@@ -1,33 +1,23 @@
 import React from "react";
-import { View, Text, Image, Button, StyleSheet } from "react-native";
+import { View, Text, Image, Button, StyleSheet, Dimensions } from "react-native";
 
-// Function to return the correct image require() statement
 const getImage = (title) => {
-  if (!title) return null; // Safety check
-
-  switch (title.toLowerCase()) {
-    case "burger":
+  switch (title) {
+    case "Burger":
       return require("./assets/images/burger.jpg");
-    case "fries":
+    case "Fries":
       return require("./assets/images/fries.jpg");
-    case "shakes":
+    case "Shakes":
       return require("./assets/images/shakes.jpg");
     default:
-      return null; // No fallback image
+      return null;
   }
 };
 
-
 const FoodItem = ({ title, price, text, onAddToOrder }) => {
-  const imageSource = getImage(title);
-
   return (
     <View style={styles.card}>
-      {imageSource ? (
-        <Image source={imageSource} style={styles.image} />
-      ) : (
-        <Text>No Image Found</Text>
-      )}
+      <Image source={getImage(title)} style={styles.image} />
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.price}>${price.toFixed(2)}</Text>
       <Button title={text} onPress={onAddToOrder} />
@@ -35,32 +25,32 @@ const FoodItem = ({ title, price, text, onAddToOrder }) => {
   );
 };
 
-
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#ffffff",
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
+    padding: 15,
+    marginBottom: 15,
+    borderRadius: 10,
     alignItems: "center",
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
     elevation: 2,
+    width: Dimensions.get("window").width > 768 ? "30%" : "45%", // Adjust width dynamically
   },
   image: {
-    width: 80,
-    height: 80,
+    width: 100,
+    height: 100,
     resizeMode: "contain",
     marginBottom: 5,
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
   },
   price: {
-    fontSize: 14,
+    fontSize: 16,
     color: "#4CAF50",
     marginBottom: 5,
   },

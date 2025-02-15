@@ -7,9 +7,11 @@ const OrdersSector = () => {
 
 const styles = StyleSheet.create({
   ordersSector: {
-    flex: 0.3, // 30% of main row
-    backgroundColor: '#d1c4e9',
-    width: '100%',
+    flex: 1, // ✅ Takes up 1 part of the row
+    backgroundColor: "#d1c4e9",
+    padding: 10,
+    alignItems: "center",
+    width: "100%",
   },
 });
 

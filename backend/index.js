@@ -25,10 +25,11 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: 'http://localhost:3000', // Adjust based on your frontend's origin
+    origin: ["http://localhost:3000", "http://localhost:8081"], // ✅ Allow both frontend URLs
     credentials: true,
   })
 );
+
 app.use(express.json());
 
 // Ensure the 'streams' directory exists

@@ -23,15 +23,16 @@ const TableTop = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     padding: 5,
-    width: '100%',
+    width: "100%",
   },
   mainRow: {
-    flex: 0.8,
-    flexDirection: 'row',
-    width: '100%',
+    flex: 1, // ✅ Ensures proper distribution
+    flexDirection: "row",
+    width: "100%",
   },
 });
+
 
 export default TableTop;
