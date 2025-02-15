@@ -5,7 +5,7 @@ import { View, Text, StyleSheet } from "react-native";
 const Seat = ({ seatNumber }) => {
   return (
     <View style={styles.seatCard}>
-      <Text style={styles.seatText}>Seat {seatNumber}</Text>
+      <Text style={styles.seatText}>Seat {seatNumber + 1}</Text>
     </View>
   );
 };
