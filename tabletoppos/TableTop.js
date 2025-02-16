@@ -1,109 +1,106 @@
+// TableTop.js
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
+import { io } from "socket.io-client"; // <-- Import the client
 import MenusSector from "./MenusSector";
 import ProductsSector from "./ProductsSector";
 import OrdersSector from "./OrdersSector";
 import HeaderSector from "./HeaderSector";
 import SeatsSector from "./SeatsSector";
 
-/**
- * The "parent" component that:
- * 1) Fetches the entire table's orders on mount and stores them in 'tableOrders'.
- * 2) Passes seat-specific data down to OrdersSector for display.
- * 3) Passes the entire tableOrders array to TableBill.
- * 4) Provides a function 'addItemToSeat' that child components can call to add a new item.
- */
 const TableTop = () => {
   const [selectedSeat, setSelectedSeat] = useState(null);
-
-  // This state holds the entire table's orders. Each entry might look like:
-  // { seatIndex: 0, tableIndex: 0, items: [ {title: 'Burger', price: 3.89, ...}, ... ] }
   const [tableOrders, setTableOrders] = useState([]);
 
-  // Fetch the entire table's orders once on mount.
+  // We'll store our socket connection reference
+  let socket;
+
   useEffect(() => {
+    // 1) Initial fetch
     fetchTableOrders();
+
+    // 2) Connect to Socket.IO (server must allow cross-origin from 19006, 8081, etc.)
+    socket = io("http://localhost:5000");
+    socket.on("connect", () => {
+      console.log("[TableTop] Socket connected, ID:", socket.id);
+    });
+
+    // On "orderUpdated", refresh local state
+    socket.on("orderUpdated", (payload) => {
+      console.log("[TableTop] Received orderUpdated:", payload);
+      // Re-fetch the entire table data
+      fetchTableOrders();
+    });
+
+    // Cleanup
+    return () => {
+      if (socket) {
+        socket.disconnect();
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchTableOrders = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/orders/table/0");
-      if (!response.ok) {
-        throw new Error(`Error fetching table orders: ${response.statusText}`);
+      const resp = await fetch("http://localhost:5000/api/orders/table/0");
+      if (!resp.ok) {
+        throw new Error("Failed to fetch table orders");
       }
-      const data = await response.json();
-      // This data is an array of seats, e.g. [{ seatIndex: 0, items: [...]}, ...]
+      const data = await resp.json();
+      // data is an array of seat objects: e.g. [{ seatIndex, items: [...] }, ...]
       setTableOrders(data || []);
     } catch (err) {
-      console.error("Error fetching table orders:", err);
+      console.error("[TableTop] Error fetching table orders:", err);
     }
   };
 
   /**
-   * Called by ProductsSector (or anywhere else) to add an item to a seat's order.
+   * Called by ProductsSector to add an item to the seat's order.
    */
   const addItemToSeat = async (seatIndex, newItem) => {
     try {
-      // 1) Find the seat object in our current state.
       const seatObj = tableOrders.find((o) => o.seatIndex === seatIndex);
       if (!seatObj) {
-        console.warn(`Seat ${seatIndex} not found in tableOrders.`);
+        console.warn(`[TableTop] Seat ${seatIndex} not found`);
         return;
       }
-      // 2) Create a new array of items with the appended item.
       const updatedItems = [...seatObj.items, newItem];
 
-      // 3) PUT to server to update that seat's items
+      // PUT
       const putResp = await fetch(`http://localhost:5000/api/orders/0/${seatIndex}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: updatedItems }),
       });
       if (!putResp.ok) {
-        throw new Error(`Error updating order: ${putResp.statusText}`);
+        throw new Error("Failed to update seat items");
       }
-
-      // 4) Re-fetch the entire table so we have fresh state
-      await fetchTableOrders();
+      // We do NOT call fetchTableOrders() here, because the server
+      // will emit "orderUpdated", which triggers it anyway.
+      console.log("[TableTop] addItemToSeat - PUT success");
     } catch (err) {
-      console.error("Error adding item to seat:", err);
+      console.error("[TableTop] Error adding item:", err);
     }
   };
 
-  // Extract the items array for the currently selected seat.
-  // If no seat is selected, it can be an empty array.
+  // The selected seat's items (or an empty array)
   const currentSeatItems =
-    tableOrders.find((seatOrder) => seatOrder.seatIndex === selectedSeat)?.items || [];
+    tableOrders.find((o) => o.seatIndex === selectedSeat)?.items || [];
 
   return (
     <View style={styles.container}>
       <HeaderSector />
-
       <View style={styles.mainRow}>
         <MenusSector />
-
-        {/* 
-          Pass selectedSeat and addItemToSeat so that 
-          ProductsSector can add items to the correct seat.
-        */}
-        <ProductsSector
-          selectedSeat={selectedSeat}
-          addItemToSeat={addItemToSeat}
-        />
-
-        {/*
-          OrdersSector now just receives the items for the selected seat 
-          (no internal fetch needed). 
-        */}
+        <ProductsSector selectedSeat={selectedSeat} addItemToSeat={addItemToSeat} />
         <OrdersSector
           selectedSeat={selectedSeat}
           seatItems={currentSeatItems}
           onBackToTableBill={() => setSelectedSeat(null)}
-          tableOrders={tableOrders} // pass the entire array
+          tableOrders={tableOrders}
         />
-
       </View>
-
       <SeatsSector onSeatSelect={setSelectedSeat} />
     </View>
   );
