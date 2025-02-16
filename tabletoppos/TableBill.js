@@ -1,37 +1,36 @@
-// TableBill.js
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 
-const TableBill = () => {
-  const [orders, setOrders] = useState([]);
+/**
+ * We removed the local fetch call and state from TableBill.
+ * Instead, TableBill now expects to get an array of seat objects from its parent
+ * so it can display the entire table's items.
+ *
+ * However, in this simpler version, we have TableBill *inside* OrdersSector, 
+ * so it doesn't get direct props from TableTop (the parent).
+ * We'll handle that by modifying OrdersSector to pass the entire table's data, 
+ * or we can fetch from context. 
+ *
+ * For now, we can just do a dummy display, or consider rewriting 
+ * so TableBill also receives 'tableOrders' from TableTop directly.
+ */
 
-  useEffect(() => {
-    fetchTableOrders();
-  }, []);
+// If you truly want TableBill to show the entire table's data, 
+// pass that data in as a prop. For instance:
+// <TableBill tableOrders={tableOrders} />
 
-  const fetchTableOrders = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/orders/table/0");
-      if (!response.ok) {
-        throw new Error(`Error fetching table orders: ${response.statusText}`);
-      }
-      const data = await response.json();
-      setOrders(data || []);
-    } catch (err) {
-      console.error("Error fetching table orders:", err);
-    }
-  };
+const TableBill = ({ tableOrders = [] }) => {
+  // Flatten all seats' items
+  const allItems = tableOrders.flatMap((seat) => seat.items || []);
 
   const calculateTotal = () => {
-    return orders
-      .reduce((total, order) => {
-        return (
-          total +
-          order.items.reduce(
-            (seatTotal, item) => seatTotal + item.price * item.quantity,
-            0
-          )
-        );
+    return tableOrders
+      .reduce((sum, seat) => {
+        const seatTotal = seat.items?.reduce(
+          (subtotal, item) => subtotal + item.price * item.quantity,
+          0
+        ) || 0;
+        return sum + seatTotal;
       }, 0)
       .toFixed(2);
   };
@@ -39,10 +38,10 @@ const TableBill = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Table 1 Bill</Text>
-      {orders.length > 0 ? (
+      {allItems.length > 0 ? (
         <FlatList
-          data={orders.flatMap((order) => order.items)}
-          keyExtractor={(item, index) => index.toString()}
+          data={allItems}
+          keyExtractor={(_, index) => index.toString()}
           renderItem={({ item }) => (
             <Text style={styles.orderItem}>
               {item.title} - ${item.price.toFixed(2)}
