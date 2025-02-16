@@ -1,16 +1,16 @@
 // routes/orders.js
-import express from 'express';
-import Order from '../models/Order.js';
+import express from "express";
+import Order from "../models/Order.js";
 
 const router = express.Router();
 
-// **New Clear All Orders Endpoint**
-// PUT /api/orders/clear-all
-router.put('/clear-all', async (req, res) => {
+/**
+ * Clears all orders in the DB
+ * PUT /api/orders/clear-all
+ */
+router.put("/clear-all", async (req, res) => {
   try {
-    // Remove all orders from the collection
     await Order.deleteMany({});
-
     res.status(200).json({ message: "All orders have been cleared." });
   } catch (err) {
     console.error("Error clearing orders:", err);
@@ -18,8 +18,11 @@ router.put('/clear-all', async (req, res) => {
   }
 });
 
-// Get all orders
-router.get('/', async (req, res) => {
+/**
+ * GET /api/orders/
+ * Returns all orders in the DB
+ */
+router.get("/", async (req, res) => {
   try {
     const orders = await Order.find();
     res.json(orders);
@@ -28,8 +31,11 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get orders for a specific table
-router.get('/table/:tableIndex', async (req, res) => {
+/**
+ * GET /api/orders/table/:tableIndex
+ * Returns all orders for a specific table
+ */
+router.get("/table/:tableIndex", async (req, res) => {
   const { tableIndex } = req.params;
   try {
     const orders = await Order.find({ tableIndex: Number(tableIndex) });
@@ -39,8 +45,11 @@ router.get('/table/:tableIndex', async (req, res) => {
   }
 });
 
-// Get order for a specific seat at a table
-router.get('/:tableIndex/:seatIndex', async (req, res) => {
+/**
+ * GET /api/orders/:tableIndex/:seatIndex
+ * Returns the order for a specific seat at a table
+ */
+router.get("/:tableIndex/:seatIndex", async (req, res) => {
   const { tableIndex, seatIndex } = req.params;
   try {
     const order = await Order.findOne({
@@ -48,7 +57,7 @@ router.get('/:tableIndex/:seatIndex', async (req, res) => {
       seatIndex: Number(seatIndex),
     });
     if (!order) {
-      return res.status(404).json({ message: 'Order not found.' });
+      return res.status(404).json({ message: "Order not found." });
     }
     return res.json(order);
   } catch (err) {
@@ -56,24 +65,36 @@ router.get('/:tableIndex/:seatIndex', async (req, res) => {
   }
 });
 
-
-// Update order for a specific seat at a table
-router.put('/:tableIndex/:seatIndex', async (req, res) => {
+/**
+ * PUT /api/orders/:tableIndex/:seatIndex
+ * Update (or upsert) the items for a specific seat at a table.
+ * Then emit a "orderUpdated" event via Socket.IO.
+ */
+router.put("/:tableIndex/:seatIndex", async (req, res) => {
   const { tableIndex, seatIndex } = req.params;
   const { items } = req.body;
 
   try {
+    // Upsert the seat's order in Mongo
     const order = await Order.findOneAndUpdate(
       { tableIndex: Number(tableIndex), seatIndex: Number(seatIndex) },
       { items },
       { new: true, upsert: true }
     );
-    res.json(order);
+
+    // Broadcast to all connected Socket.IO clients
+    const io = req.app.get("socketIo"); // Retrieve the Socket.IO instance
+    io.emit("orderUpdated", {
+      tableIndex: Number(tableIndex),
+      seatIndex: Number(seatIndex),
+      items: order.items,
+    });
+
+    return res.json(order);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.error("Error updating order:", err);
+    return res.status(400).json({ message: err.message });
   }
 });
-
-
 
 export default router;
