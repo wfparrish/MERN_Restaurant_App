@@ -1,12 +1,11 @@
-// Seat.js
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
-const Seat = ({ seatNumber }) => {
+const Seat = ({ seatNumber, onSeatSelect }) => {
   return (
-    <View style={styles.seatCard}>
+    <TouchableOpacity style={styles.seatCard} onPress={onSeatSelect}>
       <Text style={styles.seatText}>Seat {seatNumber + 1}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -15,15 +14,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     padding: 15,
     margin: 8,
-    borderRadius: 10, // Rounded corners
+    borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
-    elevation: 3, // Shadow for Android
-    minWidth: 160, // Ensures a good size for seats
+    elevation: 3,
+    minWidth: 160,
   },
   seatText: {
     fontSize: 16,

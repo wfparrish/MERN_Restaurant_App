@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import Seat from "./Seat";
 
-const SeatsSector = () => {
+const SeatsSector = ({ onSeatSelect }) => {
   const seats = [0, 1, 2, 3]; // Assuming 4 seats
 
   return (

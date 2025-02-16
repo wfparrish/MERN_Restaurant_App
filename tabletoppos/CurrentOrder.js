@@ -1,36 +1,22 @@
-// CurrentOrder.js
+import React from "react";
+import { View, Text, FlatList, Button, StyleSheet } from "react-native";
 
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
+const CurrentOrder = ({ seatNumber, order, onBackToTableBill }) => {
+  // Debug logs to confirm props are received correctly
+  console.log("CurrentOrder -> Received seatNumber:", seatNumber);
+  console.log("CurrentOrder -> Received order:", order);
 
-const CurrentOrder = ({ seatNumber, onBackToTableBill }) => {
-  const [order, setOrder] = useState([]);
-
-  useEffect(() => {
-    fetchSeatOrder(seatNumber);
-  }, [seatNumber]);
-
-  const fetchSeatOrder = async (seatNumber) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/orders/0/${seatNumber}`);
-      if (!response.ok) {
-        throw new Error(`Error fetching order: ${response.statusText}`);
-      }
-      const data = await response.json();
-      setOrder(data.items || []);
-    } catch (err) {
-      console.error('Error fetching order:', err);
-    }
-  };
-
+  // Calculate the total for the array of items
   const calculateTotal = () => {
-    return order.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+    return order
+      .reduce((sum, item) => sum + item.price * item.quantity, 0)
+      .toFixed(2);
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Current Order for Seat {seatNumber + 1}</Text>
-      {order.length > 0 ? (
+      {order && order.length > 0 ? (
         <FlatList
           data={order}
           keyExtractor={(item, index) => index.toString()}
@@ -53,11 +39,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
   },
   header: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   orderItem: {
@@ -66,12 +52,12 @@ const styles = StyleSheet.create({
   },
   noItems: {
     fontSize: 16,
-    color: '#999',
+    color: "#999",
     marginVertical: 10,
   },
   total: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 10,
   },
 });
