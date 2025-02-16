@@ -8,7 +8,7 @@ const SeatsSector = ({ onSeatSelect }) => {
   return (
     <View style={styles.seatsSector}>
       {seats.map((seat) => (
-        <Seat key={seat} seatNumber={seat} onSeatSelect={() => onSeatSelect(seat - 1)} /> // Pass zero-based index
+        <Seat key={seat} seatNumber={seat} onSeatSelect={() => onSeatSelect(seat)} /> // Pass zero-based index
       ))}
     </View>
   );
