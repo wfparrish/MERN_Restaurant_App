@@ -1,11 +1,9 @@
 // TableBill.js
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
-import CurrentOrder from './CurrentOrder';
+import React, { useEffect, useState } from "react";
+import { View, Text, FlatList, StyleSheet } from "react-native";
 
 const TableBill = () => {
   const [orders, setOrders] = useState([]);
-  const [selectedSeat, setSelectedSeat] = useState(null);
 
   useEffect(() => {
     fetchTableOrders();
@@ -13,14 +11,14 @@ const TableBill = () => {
 
   const fetchTableOrders = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/orders/table/0');
+      const response = await fetch("http://localhost:5000/api/orders/table/0");
       if (!response.ok) {
         throw new Error(`Error fetching table orders: ${response.statusText}`);
       }
       const data = await response.json();
       setOrders(data || []);
     } catch (err) {
-      console.error('Error fetching table orders:', err);
+      console.error("Error fetching table orders:", err);
     }
   };
 
@@ -38,51 +36,23 @@ const TableBill = () => {
       .toFixed(2);
   };
 
-  const handleSeatSelect = (seatIndex) => {
-    setSelectedSeat(seatIndex);
-  };
-
-  const handleBackToTableBill = () => {
-    setSelectedSeat(null);
-  };
-
   return (
     <View style={styles.container}>
-      {selectedSeat === null ? (
-        <>
-          <Text style={styles.header}>Table 1 Bill</Text>
-          {orders.length > 0 ? (
-            <FlatList
-              data={orders.flatMap((order) => order.items)}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <Text style={styles.orderItem}>
-                  {item.title} - ${item.price.toFixed(2)}
-                </Text>
-              )}
-            />
-          ) : (
-            <Text style={styles.noItems}>No items ordered yet.</Text>
+      <Text style={styles.header}>Table 1 Bill</Text>
+      {orders.length > 0 ? (
+        <FlatList
+          data={orders.flatMap((order) => order.items)}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <Text style={styles.orderItem}>
+              {item.title} - ${item.price.toFixed(2)}
+            </Text>
           )}
-          <Text style={styles.total}>Total Amount: ${calculateTotal()}</Text>
-          <Text style={styles.header}>Select a Seat to View Details:</Text>
-          <View style={styles.seatContainer}>
-            {orders.map((order) => (
-              <Button
-                key={order.seatIndex}
-                title={`Seat ${order.seatIndex + 1}`}
-                onPress={() => handleSeatSelect(order.seatIndex)}
-              />
-            ))}
-          </View>
-        </>
-      ) : (
-        <CurrentOrder
-          seatNumber={selectedSeat}
-          orders={orders}
-          onBackToTableBill={handleBackToTableBill}
         />
+      ) : (
+        <Text style={styles.noItems}>No items ordered yet.</Text>
       )}
+      <Text style={styles.total}>Total Amount: ${calculateTotal()}</Text>
     </View>
   );
 };
@@ -91,11 +61,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
   },
   header: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   orderItem: {
@@ -104,19 +74,13 @@ const styles = StyleSheet.create({
   },
   noItems: {
     fontSize: 16,
-    color: '#999',
+    color: "#999",
     marginVertical: 10,
   },
   total: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 10,
-  },
-  seatContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    marginTop: 20,
   },
 });
 

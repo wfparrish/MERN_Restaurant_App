@@ -39,6 +39,24 @@ router.get('/table/:tableIndex', async (req, res) => {
   }
 });
 
+// Get order for a specific seat at a table
+router.get('/:tableIndex/:seatIndex', async (req, res) => {
+  const { tableIndex, seatIndex } = req.params;
+  try {
+    const order = await Order.findOne({
+      tableIndex: Number(tableIndex),
+      seatIndex: Number(seatIndex),
+    });
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found.' });
+    }
+    return res.json(order);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
 // Update order for a specific seat at a table
 router.put('/:tableIndex/:seatIndex', async (req, res) => {
   const { tableIndex, seatIndex } = req.params;
