@@ -16,10 +16,13 @@ const FoodItemSchema = new mongoose.Schema({
   },
   text: {
     type: String,
-    required: true,
+    required: false,
+  },
+  menuType: {
+    type: String,
+    required: true,  // e.g. "Breakfast", "Lunch", "Dinner", "Dessert"
   },
 });
 
-// Use `export default` instead of `module.exports`
 const FoodItem = mongoose.model("FoodItem", FoodItemSchema);
 export default FoodItem;
