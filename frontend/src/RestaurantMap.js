@@ -1,5 +1,5 @@
 // RestaurantMap.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { io } from "socket.io-client"; // <-- Import Socket.IO client
 import Table from "./Table";
@@ -37,38 +37,38 @@ function RestaurantMap() {
     dessert_menu_offered: 1,
   };
 
-  // We'll store a reference to our socket connection
-  // so we don't re-connect repeatedly.
-  // Alternatively, you can just do a local variable in useEffect.
-  let socket;
+  // Use useRef to persist socket connection across renders
+  const socketRef = useRef(null);
 
   useEffect(() => {
     // 1) Initial data load
     fetchInitialData();
 
-    // 2) Connect to Socket.IO server
-    socket = io("http://localhost:5000", {
-      // if needed: transports: ["websocket"]
-    });
+    // 2) Connect to Socket.IO server only once
+    if (!socketRef.current) {
+      socketRef.current = io("http://localhost:5000", {
+        // if needed: transports: ["websocket"]
+      });
 
-    socket.on("connect", () => {
-      console.log("[RestaurantMap] Connected via socket:", socket.id);
-    });
+      socketRef.current.on("connect", () => {
+        console.log("[RestaurantMap] Connected via socket:", socketRef.current.id);
+      });
 
-    // On "orderUpdated", re-fetch the entire set of orders
-    socket.on("orderUpdated", (payload) => {
-      console.log("[RestaurantMap] orderUpdated event received:", payload);
-      fetchAllOrders();
-    });
+      // On "orderUpdated", re-fetch the entire set of orders
+      socketRef.current.on("orderUpdated", (payload) => {
+        console.log("[RestaurantMap] orderUpdated event received:", payload);
+        fetchAllOrders();
+      });
 
-    socket.on("disconnect", () => {
-      console.log("[RestaurantMap] Socket disconnected");
-    });
+      socketRef.current.on("disconnect", () => {
+        console.log("[RestaurantMap] Socket disconnected");
+      });
+    }
 
     // Cleanup when unmounting
     return () => {
-      if (socket) {
-        socket.disconnect();
+      if (socketRef.current) {
+        socketRef.current.disconnect();
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -131,11 +131,6 @@ function RestaurantMap() {
       setLoading(false);
     }
   };
-
-  // updateOrder, removeFromOrder, resetTablePositions, clearAllOrders, etc.
-  // (unchanged from your existing code except for re-checking if you need
-  // to do an additional re-fetch or rely on the socket event).
-  // For brevity, we'll keep them as-is.
 
   const handleTablePositionChange = async (tableIndex, newPosition) => {
     setTablePositions((prev) => ({
