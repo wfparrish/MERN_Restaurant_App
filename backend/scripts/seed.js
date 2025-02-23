@@ -84,13 +84,6 @@ const seedData = [
     menuType: "Dinner",
   },
   {
-    img: "/path/to/icecream.png",
-    title: "Ice Cream",
-    price: 3.50,
-    text: "Click Me!",
-    menuType: "Dessert",
-  },
-  {
     img: "/path/to/donut.png",
     title: "Donut",
     price: 2.50,

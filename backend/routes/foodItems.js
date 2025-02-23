@@ -16,13 +16,14 @@ router.get("/", async (req, res) => {
 
 // POST a new food item
 router.post("/", async (req, res) => {
-  const { img, title, price, text } = req.body;
+  const { img, title, price, text, menuType } = req.body;
 
   const foodItem = new FoodItem({
     img,
     title,
     price,
     text,
+    menuType,
   });
 
   try {
