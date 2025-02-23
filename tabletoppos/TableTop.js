@@ -1,7 +1,6 @@
-// TableTop.js
 import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet } from "react-native";
-import { io } from "socket.io-client"; 
+import { io } from "socket.io-client";
 import MenusSector from "./MenusSector";
 import ProductsSector from "./ProductsSector";
 import OrdersSector from "./OrdersSector";
@@ -10,11 +9,11 @@ import SeatsSector from "./SeatsSector";
 
 const TableTop = () => {
   const [selectedSeat, setSelectedSeat] = useState(null);
+  const [selectedMenu, setSelectedMenu] = useState("Lunch"); // Default menu
   const [tableOrders, setTableOrders] = useState([]);
   const isFetched = useRef(false);
   const socketRef = useRef(null);
 
-  // 🟢 Fetch orders once on mount
   useEffect(() => {
     if (!isFetched.current) {
       fetchTableOrders();
@@ -22,12 +21,11 @@ const TableTop = () => {
     }
   }, []);
 
-  // 🟢 Setup WebSocket connection
   useEffect(() => {
     socketRef.current = io("http://localhost:5000");
 
     socketRef.current.on("orderUpdated", () => {
-      fetchTableOrders(); // Fetch updated orders when an order is updated
+      fetchTableOrders();
     });
 
     return () => {
@@ -37,9 +35,6 @@ const TableTop = () => {
     };
   }, []);
 
-  /**
-   * Fetch orders from backend
-   */
   const fetchTableOrders = async () => {
     try {
       const resp = await fetch("http://localhost:5000/api/orders/table/0");
@@ -53,9 +48,6 @@ const TableTop = () => {
     }
   };
 
-  /**
-   * Called by ProductsSector to add an item to the seat's order.
-   */
   const addItemToSeat = async (seatIndex, newItem) => {
     try {
       const seatObj = tableOrders.find((o) => o.seatIndex === seatIndex);
@@ -77,7 +69,6 @@ const TableTop = () => {
     }
   };
 
-  // The selected seat's items (or an empty array)
   const currentSeatItems =
     tableOrders.find((o) => o.seatIndex === selectedSeat)?.items || [];
 
@@ -85,15 +76,32 @@ const TableTop = () => {
     <View style={styles.container}>
       <HeaderSector />
       <View style={styles.mainRow}>
-        <MenusSector />
-        <ProductsSector selectedSeat={selectedSeat} addItemToSeat={addItemToSeat} />
-        <OrdersSector
-          selectedSeat={selectedSeat}
-          seatItems={currentSeatItems}
-          onBackToTableBill={() => setSelectedSeat(null)}
-          tableOrders={tableOrders}
-        />
+        {/* MenusSector should be on the left side */}
+        <View style={styles.leftColumn}>
+          <MenusSector onSelectMenu={setSelectedMenu} />
+        </View>
+
+        {/* Middle Section - Products Display */}
+        <View style={styles.middleColumn}>
+          <ProductsSector 
+            selectedSeat={selectedSeat} 
+            addItemToSeat={addItemToSeat} 
+            selectedMenu={selectedMenu} 
+          />
+        </View>
+
+        {/* Right Section - Orders Display */}
+        <View style={styles.rightColumn}>
+          <OrdersSector 
+            selectedSeat={selectedSeat} 
+            seatItems={currentSeatItems} 
+            onBackToTableBill={() => setSelectedSeat(null)} 
+            tableOrders={tableOrders} 
+          />
+        </View>
       </View>
+
+      {/* Bottom Row - Seats Selection */}
       <SeatsSector onSeatSelect={setSelectedSeat} />
     </View>
   );
@@ -108,8 +116,23 @@ const styles = StyleSheet.create({
   },
   mainRow: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: "row", // Keep sections side by side
     width: "100%",
+  },
+  leftColumn: {
+    flex: 0.2, // Make MenusSector smaller in width
+    backgroundColor: "#FF9966", // Keep it distinct
+    padding: 10,
+  },
+  middleColumn: {
+    flex: 0.6, // Make Product Sector the main part
+    backgroundColor: "#E0F7FA",
+    padding: 10,
+  },
+  rightColumn: {
+    flex: 0.2, // OrdersSector should remain smaller
+    backgroundColor: "#E1BEE7",
+    padding: 10,
   },
 });
 

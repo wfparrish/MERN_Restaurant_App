@@ -4,34 +4,33 @@ import FoodItem from "./FoodItem";
 
 const API_URL = "http://localhost:5000/api/food-items";
 
-/**
- * ProductsSector now accepts:
- *  - selectedSeat  => which seat to add items to
- *  - addItemToSeat => function from TableTop that does the PUT + state update
- */
-const ProductsSector = ({ selectedSeat, addItemToSeat }) => {
+const ProductsSector = ({ selectedSeat, addItemToSeat, selectedMenu }) => {
   const [foodItems, setFoodItems] = useState([]);
-  const [screenWidth, setScreenWidth] = useState(
-    Dimensions.get("window").width
-  );
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get("window").width);
 
   useEffect(() => {
+    // Fetch all food items from the server
     fetch(API_URL)
       .then((response) => response.json())
       .then((data) => setFoodItems(data))
-      .catch((error) =>
-        console.error("Error fetching food items:", error)
-      );
+      .catch((error) => console.error("Error fetching food items:", error));
 
-    const updateWidth = () =>
-      setScreenWidth(Dimensions.get("window").width);
+    // Listen for screen size changes so we can adjust how many columns we show
+    const updateWidth = () => setScreenWidth(Dimensions.get("window").width);
     Dimensions.addEventListener("change", updateWidth);
 
-    return () =>
+    // Cleanup the event listener when the component unmounts
+    return () => {
       Dimensions.removeEventListener("change", updateWidth);
+    };
   }, []);
 
-  // We handle the click event by calling the parent's addItemToSeat
+  // Filter items based on the selected menu (e.g. "Breakfast", "Lunch", etc.)
+  const filteredItems = selectedMenu
+    ? foodItems.filter((item) => item.menuType === selectedMenu)
+    : foodItems;
+
+  // Handle the user tapping "CLICK ME!" or "Add to Order" (whatever text you pass in)
   const handleAddToOrder = (item) => {
     if (selectedSeat === null) {
       alert("Please select a seat first!");
@@ -44,12 +43,16 @@ const ProductsSector = ({ selectedSeat, addItemToSeat }) => {
     });
   };
 
+  // Decide how many columns to use based on the screen width
+  const numColumns = screenWidth > 768 ? 3 : 2;
+
   return (
     <View style={styles.productsSector}>
       <FlatList
-        data={foodItems}
+        data={filteredItems}
         keyExtractor={(item) => item.title}
-        numColumns={screenWidth > 768 ? 3 : 2}
+        numColumns={numColumns}
+        columnWrapperStyle={styles.row}
         renderItem={({ item }) => (
           <FoodItem
             title={item.title}
@@ -58,7 +61,6 @@ const ProductsSector = ({ selectedSeat, addItemToSeat }) => {
             onAddToOrder={() => handleAddToOrder(item)}
           />
         )}
-        columnWrapperStyle={styles.row}
       />
     </View>
   );
