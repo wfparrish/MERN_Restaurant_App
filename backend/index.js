@@ -29,9 +29,15 @@ const server = http.createServer(app);
 // 2) Create Socket.IO server from that HTTP server
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: ["http://localhost:3000", "http://localhost:8081"], // Explicitly allow frontend origin
+    methods: ["GET", "POST"],
+    credentials: true,
   },
+  transports: ["websocket", "polling"], // ✅ Ensure WebSocket is explicitly enabled
 });
+
+console.log("Socket.IO is running:", !!io);
+
 
 // Store io so the orders router can access it
 app.set("socketIo", io);
@@ -43,6 +49,7 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(express.json());
 
 // Ensure the 'streams' directory exists
@@ -209,11 +216,15 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   console.log("A client connected:", socket.id);
 
+  socket.on("orderUpdated", (payload) => {
+    console.log("Received orderUpdated event:", payload);
+    io.emit("orderUpdated", payload); // Broadcast it back to all clients
+  });
+
   socket.on("disconnect", () => {
     console.log("A client disconnected:", socket.id);
   });
 });
-
 // 4) Start the server with server.listen (not app.listen!)
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -82,6 +82,11 @@ router.put("/:tableIndex/:seatIndex", async (req, res) => {
       { new: true, upsert: true }
     );
 
+    // Debug logs before we emit
+    console.log("PUT /:tableIndex/:seatIndex -> about to emit orderUpdated");
+    console.log("    tableIndex:", tableIndex);
+    console.log("    seatIndex:", seatIndex);
+
     // Broadcast to all connected Socket.IO clients
     const io = req.app.get("socketIo"); // Retrieve the Socket.IO instance
     io.emit("orderUpdated", {
@@ -89,6 +94,8 @@ router.put("/:tableIndex/:seatIndex", async (req, res) => {
       seatIndex: Number(seatIndex),
       items: order.items,
     });
+
+    console.log("Emitted orderUpdated for tableIndex:", tableIndex);
 
     return res.json(order);
   } catch (err) {

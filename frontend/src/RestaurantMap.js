@@ -41,38 +41,54 @@ function RestaurantMap() {
   const socketRef = useRef(null);
 
   useEffect(() => {
-    // 1) Initial data load
-    fetchInitialData();
+    let ignore = false; // 🚨 Prevents duplicate fetch in StrictMode
 
-    // 2) Connect to Socket.IO server only once
-    if (!socketRef.current) {
+    const initialize = async () => {
+      if (socketRef.current) {
+        console.log("🟡 Socket already exists, skipping re-initialization.");
+        return; // ✅ Prevents duplicate socket creation
+      }
+
+      console.log("⏳ Running fetchInitialData()...");
+      const data = await fetchInitialData();
+
+      if (ignore) return; // 🛑 Don't proceed if component was unmounted
+
+      console.log("✅ fetchInitialData() complete. Now initializing WebSocket...");
+
       socketRef.current = io("http://localhost:5000", {
-        // if needed: transports: ["websocket"]
+        transports: ["websocket", "polling"],
+        withCredentials: true,
       });
 
       socketRef.current.on("connect", () => {
         console.log("[RestaurantMap] Connected via socket:", socketRef.current.id);
       });
 
-      // On "orderUpdated", re-fetch the entire set of orders
       socketRef.current.on("orderUpdated", (payload) => {
         console.log("[RestaurantMap] orderUpdated event received:", payload);
-        fetchAllOrders();
+        if (!ignore) fetchAllOrders(); // ✅ Prevents fetch if unmounted
       });
 
       socketRef.current.on("disconnect", () => {
         console.log("[RestaurantMap] Socket disconnected");
       });
-    }
+    };
 
-    // Cleanup when unmounting
+    initialize(); // 🔥 Call the function
+
     return () => {
+      ignore = true; // 🛑 Mark as unmounted to prevent duplicate fetches
       if (socketRef.current) {
+        console.log("[RestaurantMap] Cleaning up socket connection...");
         socketRef.current.disconnect();
+        socketRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+
+
 
   // For brevity, we separate out the order fetch into a function
   const fetchAllOrders = async () => {
@@ -82,6 +98,10 @@ function RestaurantMap() {
       const ordersData = Array.from({ length: numberOfTables }, () =>
         Array.from({ length: seatsPerTable }, () => [])
       );
+
+      //Debugging fetching orders, I'm expecting to see this after the socket forces a refresh
+      console.log("fetchAllOrders -> orders fetched:", ordersResponse.data);
+
 
       ordersResponse.data.forEach(({ tableIndex, seatIndex, items }) => {
         if (
@@ -100,6 +120,7 @@ function RestaurantMap() {
   };
 
   const fetchInitialData = async () => {
+    console.log("fetchInitialData() called");
     try {
       // Fetch table positions
       const positionsResponse = await axios.get(
