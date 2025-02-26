@@ -29,6 +29,31 @@ restaurant-app/
 └── README.md
 ```
 
+## Hardware Stack
+
+This setup utilizes network hardware to manage camera streams and POS connectivity effectively.
+
+- **Cisco Catalyst Switch** – Acts as the main network switch, managing traffic for all connected devices.
+- **Trendnet PoE Switch (TPE-1020WS)** – Provides Power over Ethernet (PoE) to **Hikvision cameras** and other devices.
+- **Hikvision IP Cameras** – Used for AI-driven object detection and tracking.
+- **Intel NUC / Server** – Runs the backend services including MongoDB and real-time processing.
+- **Tablet Devices** – Connect to the TableTop POS application wirelessly.
+
+### **Recommended Network Subnet Configuration**
+
+To ensure smooth connectivity between the hardware components, the following subnet configuration is recommended:
+
+- **Management Network (Switch & PoE devices)**: `192.168.1.0/24`
+  - **Cisco Catalyst Switch IP**: `192.168.1.2`
+  - **Trendnet PoE Switch IP**: `192.168.1.100`
+- **Camera Network**: `192.168.1.0/24`
+  - **Hikvision Camera 1**: `192.168.1.10`
+  - **Hikvision Camera 2**: `192.168.1.11`
+- **POS & Application Servers**: `192.168.1.0/24`
+  - **Backend Server (Intel NUC / VM)**: `192.168.1.x` subnet
+  - **Admin Workstations**: `192.168.1.x` subnet
+- **Tablet Devices (Dynamic DHCP Assignments)**: `192.168.1.x`
+
 ## Installation Steps
 
 ### 1. Clone the repository
@@ -162,9 +187,11 @@ npx yarn start
 - **Replace HLS with WebRTC or RTMP** for real-time video streaming.
 - **Optimize WebSockets** for real-time updates.
 - **Add Redux** for better state management.
-- **Add table management functions** combining checks or adding seats.
-- **AI-Assisted Video Analytics** AI-driven analysis of the environment.
+- **Implement Object Detection** to identify food items and table settings in real time.
+  - Recommended Libraries: OpenCV, TensorFlow.js, YOLO.
+- **Enhance Object Tracking** to monitor staff and customer movements for operational efficiency.
+  - Recommended Libraries: DeepSORT, MediaPipe, OpenCV.
 
 ---
 
-**Project Contributors:** William Parrish
+**Project Contributors:** Your Name Here
