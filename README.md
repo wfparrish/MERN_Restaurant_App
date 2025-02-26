@@ -194,4 +194,4 @@ npx yarn start
 
 ---
 
-**Project Contributors:** Your Name Here
+**Project Contributors:** William Parrish
