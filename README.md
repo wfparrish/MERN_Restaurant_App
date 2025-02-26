@@ -59,7 +59,7 @@ To ensure smooth connectivity between the hardware components, the following sub
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-repo/MERN_Restaurant_App.git
+git clone https://github.com/wfparrish/MERN_Restaurant_App.git
 cd MERN_Restaurant_App
 ```
 
