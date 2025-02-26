@@ -162,6 +162,8 @@ npx yarn start
 - **Replace HLS with WebRTC or RTMP** for real-time video streaming.
 - **Optimize WebSockets** for real-time updates.
 - **Add Redux** for better state management.
+- **Add table management functions** combining checks or adding seats.
+- **AI-Assisted Video Analytics** AI-driven analysis of the environment.
 
 ---
 
