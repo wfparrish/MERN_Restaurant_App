@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This is a full-stack MERN (MongoDB, Express, React, Node.js) application designed for restaurant management. It includes an admin panel, a customer-facing TableTop POS, and real-time updates using web sockets.
+This is a full-stack MERN (MongoDB, Express, React, Node.js) application designed for restaurant management. It includes an admin panel, a customer-facing TableTop POS, and real-time updates using WebSockets.
 
 ## Project Structure
 
@@ -39,7 +39,7 @@ This setup utilizes network hardware to manage camera streams and POS connectivi
 - **Intel NUC / Server** – Runs the backend services including MongoDB and real-time processing.
 - **Tablet Devices** – Connect to the TableTop POS application wirelessly.
 
-### **Recommended Network Subnet Configuration**
+## **Recommended Network Subnet Configuration**
 
 To ensure smooth connectivity between the hardware components, the following subnet configuration is recommended:
 
@@ -54,16 +54,121 @@ To ensure smooth connectivity between the hardware components, the following sub
   - **Admin Workstations**: `192.168.1.x` subnet
 - **Tablet Devices (Dynamic DHCP Assignments)**: `192.168.1.x`
 
-## Installation Steps
+## **Network Hardware Configuration (Required for Both Windows & RHEL 9 Installations)**
 
-### 1. Clone the repository
+### **Cisco Catalyst Switch**
 
-```bash
+```plaintext
+enable
+configure terminal
+hostname CatalystSwitch
+interface vlan1
+ip address 192.168.1.2 255.255.255.0
+no shutdown
+exit
+wr mem
+```
+
+### **Trendnet PoE Switch**
+
+- Access the web interface at `192.168.10.200` and change its IP to `192.168.1.100`.
+
+### **Hikvision Cameras**
+
+- Default IP: `192.168.1.64`
+- Change camera IPs:
+  - **Camera 1:** `192.168.1.10`
+  - **Camera 2:** `192.168.1.11`
+- Test RTSP streams using VLC:
+  ```plaintext
+  vlc rtsp://192.168.1.10:554/Streaming/channels/101
+  ```
+
+---
+
+## Installation Options
+
+This application supports **both Windows and RHEL 9 installations**. Choose the appropriate instructions for your system:
+
+---
+
+## **Installation on Windows**
+
+### **1. Clone the Repository**
+
+```powershell
 git clone https://github.com/wfparrish/MERN_Restaurant_App.git
 cd MERN_Restaurant_App
 ```
 
-### 2. Install dependencies
+### **2. Install Dependencies**
+
+```powershell
+cd backend && yarn install
+cd ../frontend && yarn install
+cd ../tabletoppos && yarn install
+```
+
+### **3. Set Up MongoDB**
+
+1. Download MongoDB from [MongoDB Official Site](https://www.mongodb.com/try/download/community).
+2. Install it and ensure the MongoDB service is running.
+3. Create a `C:\data\db` directory if it does not exist.
+4. Start MongoDB:
+   ```powershell
+   mongod --dbpath C:\data\db
+   ```
+
+### **4. Start the Application**
+
+```powershell
+cd backend && yarn dev
+cd ../frontend && yarn start
+cd ../tabletoppos && yarn start
+```
+
+---
+
+## **Installation on RHEL 9**
+
+### **1. Install RHEL 9 on the Intel NUC**
+
+1. **Download the RHEL 9 ISO** from the [Red Hat Customer Portal](https://access.redhat.com/) or the [Red Hat Developer Program](https://developers.redhat.com/).
+2. **Create a bootable USB** using [Fedora Media Writer](https://getfedora.org/en/workstation/download/).
+   - Select **Custom Image** and load the RHEL 9 ISO.
+   - Write the image to a USB drive (minimum 8GB).
+3. **Install RHEL 9**:
+   - Boot from the USB and follow on-screen instructions.
+   - Configure network settings and user credentials.
+4. **After installation**, update the system:
+   ```bash
+   sudo dnf update -y
+   ```
+
+### **2. Install Dependencies**
+
+```bash
+sudo dnf install -y git curl wget nano gcc-c++ make
+```
+
+### **3. Install MongoDB on RHEL 9**
+
+```bash
+sudo dnf install -y mongodb-org
+sudo systemctl enable mongod
+sudo systemctl start mongod
+```
+
+### **4. Install Node.js & Yarn**
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+source ~/.bashrc
+nvm install 18
+npm install -g yarn
+```
+
+### **5. Install Project Dependencies**
 
 ```bash
 cd backend && yarn install
@@ -71,116 +176,26 @@ cd ../frontend && yarn install
 cd ../tabletoppos && yarn install
 ```
 
-### 3. Set up MongoDB
-
-If MongoDB is not installed, install it:
+### **6. Start Services**
 
 ```bash
-sudo apt-get update
-sudo apt-get install -y mongodb
+sudo systemctl start mongod
+cd backend && yarn dev &
+cd frontend && yarn start &
+cd tabletoppos && yarn start &
 ```
 
-Create the necessary database directory (if it does not exist):
+---
+
+## **Rollback Process (For RHEL 9 Installations)**
+
+If something goes wrong, run the **rollback script**:
 
 ```bash
-ls -ld /data/db  # Check if the directory exists
-sudo mkdir -p /data/db
-sudo chown -R `id -u` /data/db  # Set ownership for your user
+sudo ./rollback.sh
 ```
 
-Start MongoDB:
-
-```bash
-mongod --fork --logpath /var/log/mongodb.log
-```
-
-Confirm MongoDB is running:
-
-```bash
-mongo  # Open the MongoDB shell
-```
-
-### 4. Create a `.env` file in the `backend/` directory
-
-```ini
-MONGO_URI=mongodb://localhost:27017/mern-restaurant-app
-PORT=5000
-CAMERA_URL_1=rtsp://192.168.1.10:554/Streaming/channels/101
-CAMERA_URL_2=rtsp://192.168.1.11:554/Streaming/channels/101
-```
-
-### 5. Seed the database
-
-```bash
-cd backend
-npx yarn seed
-```
-
-### 6. Running the Project
-
-#### **Start MongoDB**
-
-```bash
-mongod
-```
-
-#### **Start Backend**
-
-```bash
-cd backend
-npx yarn dev
-```
-
-#### **Start Frontend**
-
-```bash
-cd ../frontend
-npx yarn start
-```
-
-#### **Start TableTop POS (React Native)**
-
-```bash
-cd ../tabletoppos
-yarn start
-```
-
-## API Endpoints
-
-Test if the backend is working by running:
-
-```bash
-curl http://localhost:5000/api/food-items
-```
-
-## Troubleshooting
-
-### 1. MongoDB permission errors
-
-If MongoDB fails to start due to permission issues, try:
-
-```bash
-sudo chown -R `id -u` /data/db
-```
-
-### 2. Clearing the database
-
-If necessary, reset the database by running:
-
-```bash
-mongo
-use mern-restaurant-app
-db.dropDatabase()
-```
-
-### 3. React Hot-Reloading Issues
-
-If frontend changes do not reflect, restart the frontend server:
-
-```bash
-cd frontend
-npx yarn start
-```
+This will **remove MongoDB, Node.js, and project files** and reset the network settings.
 
 ## Future Improvements
 
