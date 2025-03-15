@@ -50,7 +50,7 @@ To ensure smooth connectivity between the hardware components, the following sub
   - **Hikvision Camera 1**: `192.168.1.10`
   - **Hikvision Camera 2**: `192.168.1.11`
 - **POS & Application Servers**: `192.168.1.0/24`
-  - **Backend Server (Intel NUC / VM)**: `192.168.1.x` subnet
+  - **Backend Server (Intel NUC / VM)**: `192.168.1.4`
   - **Admin Workstations**: `192.168.1.x` subnet
 - **Tablet Devices (Dynamic DHCP Assignments)**: `192.168.1.x`
 
@@ -86,106 +86,108 @@ wr mem
 
 ---
 
-## Installation Options
-
-This application supports **both Windows and RHEL 9 installations**. Choose the appropriate instructions for your system:
-
----
-
-## **Installation on Windows**
-
-### **1. Clone the Repository**
-
-```powershell
-git clone https://github.com/wfparrish/MERN_Restaurant_App.git
-cd MERN_Restaurant_App
-```
-
-### **2. Install Dependencies**
-
-```powershell
-cd backend && yarn install
-cd ../frontend && yarn install
-cd ../tabletoppos && yarn install
-```
-
-### **3. Set Up MongoDB**
-
-1. Download MongoDB from [MongoDB Official Site](https://www.mongodb.com/try/download/community).
-2. Install it and ensure the MongoDB service is running.
-3. Create a `C:\data\db` directory if it does not exist.
-4. Start MongoDB:
-   ```powershell
-   mongod --dbpath C:\data\db
-   ```
-
-### **4. Start the Application**
-
-```powershell
-cd backend && yarn dev
-cd ../frontend && yarn start
-cd ../tabletoppos && yarn start
-```
-
----
-
 ## **Installation on RHEL 9**
 
 ### **1. Install RHEL 9 on the Intel NUC**
 
 1. **Download the RHEL 9 ISO** from the [Red Hat Customer Portal](https://access.redhat.com/) or the [Red Hat Developer Program](https://developers.redhat.com/).
 2. **Create a bootable USB** using [Fedora Media Writer](https://getfedora.org/en/workstation/download/).
-   - Select **Custom Image** and load the RHEL 9 ISO.
-   - Write the image to a USB drive (minimum 8GB).
+   - If using an extracted ISO instead of mounting it, keep the USB connected for access.
 3. **Install RHEL 9**:
    - Boot from the USB and follow on-screen instructions.
    - Configure network settings and user credentials.
-4. **After installation**, update the system:
-   ```bash
-   sudo dnf update -y
-   ```
 
-### **2. Install Dependencies**
+### **2. Configure Local Repository (USB with Extracted ISO)**
 
 ```bash
-sudo dnf install -y git curl wget nano gcc-c++ make
+sudo mkdir -p /opt/rhel-repo
+sudo cp -r /run/media/$USER/RHEL-9-2-0-BaseOS-x86_64/* /opt/rhel-repo/
 ```
 
-### **3. Install MongoDB on RHEL 9**
+Modify repository configuration:
+
+```bash
+sudo nano /etc/yum.repos.d/local.repo
+```
+
+Add the following content:
+
+```ini
+[LocalRepo]
+name=RHEL 9 Local Repository
+baseurl=file:///run/media/$USER/RHEL-9-2-0-BaseOS-x86_64/BaseOS/
+gpgcheck=0
+enabled=1
+
+[AppStream]
+name=RHEL 9 AppStream Repository
+baseurl=file:///run/media/$USER/RHEL-9-2-0-BaseOS-x86_64/AppStream/
+gpgcheck=0
+enabled=1
+```
+
+Disable the subscription manager:
+
+```bash
+sudo vim /etc/dnf/dnf.conf
+```
+
+Add this line:
+
+```ini
+exclude=subscription-manager
+```
+
+Clean and update repository list:
+
+```bash
+sudo dnf clean all --disableplugin=subscription-manager
+sudo dnf repolist --disableplugin=subscription-manager
+```
+
+### **3. Install Required Packages**
+
+```bash
+sudo dnf install -y git curl wget nano gcc-c++ make --disableplugin=subscription-manager
+```
+
+### **4. Install MongoDB**
 
 ```bash
 sudo dnf install -y mongodb-org
-sudo systemctl enable mongod
-sudo systemctl start mongod
+sudo systemctl enable --now mongod
 ```
 
-### **4. Install Node.js & Yarn**
+Fix `vm.max_map_count` error:
 
 ```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-source ~/.bashrc
-nvm install 18
-npm install -g yarn
+echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
 ```
 
-### **5. Install Project Dependencies**
+### **5. Configure Network Connection**
 
 ```bash
-cd backend && yarn install
-cd ../frontend && yarn install
-cd ../tabletoppos && yarn install
+sudo nmcli con add type ethernet ifname eno1 con-name static-lan \
+  ipv4.address 192.168.1.4/24 \
+  ipv4.gateway 192.168.1.2 \
+  ipv4.method manual \
+  autoconnect yes
+sudo nmcli con up eno1
+ip a show eno1
 ```
 
-### **6. Start Services**
+### **6. Verify Connectivity**
 
-```bash
-sudo systemctl start mongod
-cd backend && yarn dev &
-cd frontend && yarn start &
-cd tabletoppos && yarn start &
-```
+- **Ping Devices:**
+  ```bash
+  ping -c 4 192.168.1.2  # Cisco Catalyst
+  ping -c 4 192.168.1.100 # Trendnet PoE Switch
+  ping -c 4 192.168.1.10  # Hikvision Camera 1
+  ping -c 4 192.168.1.11  # Hikvision Camera 2
+  ```
 
----
+If all devices respond, networking is configured correctly.
 
 ## **Rollback Process (For RHEL 9 Installations)**
 
