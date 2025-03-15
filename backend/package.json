@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "rmdir /s /q streams && mkdir streams && nodemon index.js",
+    "dev": "node -e \"require('os').platform() === 'win32' ? require('child_process').execSync('rmdir /s /q streams 2>nul & mkdir streams & nodemon index.js', { stdio: 'inherit', shell: true }) : require('child_process').execSync('rm -rf streams && mkdir streams && nodemon index.js', { stdio: 'inherit', shell: true })\"",
     "seed": "node scripts/seed.js"
   },
   "keywords": [],
