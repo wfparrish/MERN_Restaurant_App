@@ -189,6 +189,95 @@ ip a show eno1
 
 If all devices respond, networking is configured correctly.
 
+### **Installing Nodemon**
+
+`nodemon` is required for development to automatically restart the backend server when code changes.
+
+#### **Option 1: Using `npx` (Recommended for Local Use)**
+
+If you have `nodemon` installed as a local dependency (which is already included in `devDependencies` of `package.json`), you can run it using `npx`:
+
+```bash
+npx nodemon index.js
+```
+
+This ensures that you are using the project-specific version of `nodemon` without needing a global installation.
+
+#### **Option 2: Installing Nodemon Globally**
+
+If you prefer to run `nodemon` globally without `npx`, install it globally using Yarn:
+
+```bash
+yarn global add nodemon
+```
+
+Or using npm:
+
+```bash
+npm install -g nodemon
+```
+
+After installation, verify it works:
+
+```bash
+nodemon --version
+```
+
+#### **Fix: Nodemon Not Found After Global Installation**
+
+If `nodemon` is not found after installing it globally, you may need to add Yarn’s global binaries to your system `PATH`.
+
+1. Find the global Yarn binary path:
+
+   ```bash
+   yarn global bin
+   ```
+
+   This may return something like:
+
+   ```
+   /home/youruser/.yarn/bin
+   ```
+
+   or
+
+   ```
+   /home/youruser/.config/yarn/global/node_modules/.bin
+   ```
+
+2. Add the correct path to your shell profile:
+
+   ```bash
+   export PATH="$HOME/.yarn/bin:$PATH"
+   ```
+
+   or
+
+   ```bash
+   export PATH="$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+   ```
+
+3. Apply the changes:
+   ```bash
+   source ~/.bashrc  # If using Bash
+   source ~/.zshrc   # If using Zsh
+   ```
+
+Now, `nodemon --version` should work.
+
+#### **Option 3: Ensuring Nodemon Runs in Development Mode**
+
+To run the backend with `nodemon`, use the `dev` script from `package.json`:
+
+```bash
+yarn dev
+```
+
+This command will:
+
+- Remove and recreate the `streams` directory.
+- Start `nodemon` to watch for changes in `index.js`.
+
 <!-- ## **Rollback Process (For RHEL 9 Installations)**
 
 If something goes wrong, run the **rollback script**:
