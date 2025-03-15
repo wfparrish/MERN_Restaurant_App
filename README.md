@@ -189,7 +189,7 @@ ip a show eno1
 
 If all devices respond, networking is configured correctly.
 
-## **Rollback Process (For RHEL 9 Installations)**
+<!-- ## **Rollback Process (For RHEL 9 Installations)**
 
 If something goes wrong, run the **rollback script**:
 
@@ -197,7 +197,7 @@ If something goes wrong, run the **rollback script**:
 sudo ./rollback.sh
 ```
 
-This will **remove MongoDB, Node.js, and project files** and reset the network settings.
+This will **remove MongoDB, Node.js, and project files** and reset the network settings. -->
 
 ## Future Improvements
 
