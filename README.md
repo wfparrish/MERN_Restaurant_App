@@ -208,6 +208,7 @@ This will **remove MongoDB, Node.js, and project files** and reset the network s
   - Recommended Libraries: OpenCV, TensorFlow.js, YOLO.
 - **Enhance Object Tracking** to monitor staff and customer movements for operational efficiency.
   - Recommended Libraries: DeepSORT, MediaPipe, OpenCV.
+- **Private Subnet for the Cameras** to add a layer of control and security over access to the cameras.
 
 ---
 
