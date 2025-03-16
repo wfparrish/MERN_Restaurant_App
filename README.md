@@ -86,108 +86,267 @@ wr mem
 
 ---
 
-## **Installation on RHEL 9**
+## **🔧 Installation on RHEL 9**
 
-### **1. Install RHEL 9 on the Intel NUC**
+### **Step 1: Enable Required Repositories**
 
-1. **Download the RHEL 9 ISO** from the [Red Hat Customer Portal](https://access.redhat.com/) or the [Red Hat Developer Program](https://developers.redhat.com/).
-2. **Create a bootable USB** using [Fedora Media Writer](https://getfedora.org/en/workstation/download/).
-   - If using an extracted ISO instead of mounting it, keep the USB connected for access.
-3. **Install RHEL 9**:
-   - Boot from the USB and follow on-screen instructions.
-   - Configure network settings and user credentials.
-
-### **2. Configure Local Repository (USB with Extracted ISO)**
+Since this RHEL system is registered, enable the necessary repositories:
 
 ```bash
-sudo mkdir -p /opt/rhel-repo
-sudo cp -r /run/media/$USER/RHEL-9-2-0-BaseOS-x86_64/* /opt/rhel-repo/
+sudo subscription-manager repos --enable=rhel-9-for-x86_64-baseos-rpms
+sudo subscription-manager repos --enable=rhel-9-for-x86_64-appstream-rpms
 ```
 
-Modify repository configuration:
+Then enable CodeReady Builder (CRB):
 
 ```bash
-sudo nano /etc/yum.repos.d/local.repo
+sudo /usr/bin/crb enable
 ```
 
-Add the following content:
+---
 
-```ini
-[LocalRepo]
-name=RHEL 9 Local Repository
-baseurl=file:///run/media/$USER/RHEL-9-2-0-BaseOS-x86_64/BaseOS/
-gpgcheck=0
+### **Step 2: Install Essential Development Tools**
+
+Ensure your system has the necessary development tools:
+
+```bash
+sudo dnf groupinstall -y "Development Tools"
+sudo dnf install -y git curl wget nano gcc-c++ make
+```
+
+---
+
+### **Step 3: Install and Configure Node.js (For MERN Stack)**
+
+#### **Option 1: Using NodeSource Repository (Recommended)**
+
+```bash
+curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
+sudo dnf install -y nodejs
+```
+
+#### **Option 2: Using AppStream Repository (Older Version)**
+
+```bash
+sudo dnf module enable nodejs:18
+sudo dnf install -y nodejs
+```
+
+Verify installation:
+
+```bash
+node -v
+npm -v
+```
+
+---
+
+### **Step 4: Install Yarn**
+
+Since you prefer **Yarn**, install it using:
+
+```bash
+sudo npm install -g yarn
+yarn -v
+```
+
+---
+
+### **Step 5: Install MongoDB**
+
+```bash
+sudo tee /etc/yum.repos.d/mongodb-org-6.0.repo <<EOF
+[mongodb-org-6.0]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/9/mongodb-org/6.0/x86_64/
+gpgcheck=1
 enabled=1
-
-[AppStream]
-name=RHEL 9 AppStream Repository
-baseurl=file:///run/media/$USER/RHEL-9-2-0-BaseOS-x86_64/AppStream/
-gpgcheck=0
-enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-6.0.asc
+EOF
 ```
 
-Disable the subscription manager:
-
-```bash
-sudo vim /etc/dnf/dnf.conf
-```
-
-Add this line:
-
-```ini
-exclude=subscription-manager
-```
-
-Clean and update repository list:
-
-```bash
-sudo dnf clean all --disableplugin=subscription-manager
-sudo dnf repolist --disableplugin=subscription-manager
-```
-
-### **3. Install Required Packages**
-
-```bash
-sudo dnf install -y git curl wget nano gcc-c++ make --disableplugin=subscription-manager
-```
-
-### **4. Install MongoDB**
+Then install MongoDB:
 
 ```bash
 sudo dnf install -y mongodb-org
 sudo systemctl enable --now mongod
 ```
 
-Fix `vm.max_map_count` error:
+Verify:
 
 ```bash
-echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
-sudo sysctl -p
+mongod --version
 ```
 
-### **5. Configure Network Connection**
+---
+
+### **Step 6: Configure Network (If Not Already Set)**
 
 ```bash
 sudo nmcli con add type ethernet ifname eno1 con-name static-lan \
   ipv4.address 192.168.1.4/24 \
-  ipv4.gateway 192.168.1.2 \
+  ipv4.gateway 10.0.0.1 \
   ipv4.method manual \
   autoconnect yes
 sudo nmcli con up eno1
 ip a show eno1
 ```
 
-### **6. Verify Connectivity**
+### **Step 7: Install FFmpeg**
 
-- **Ping Devices:**
-  ```bash
-  ping -c 4 192.168.1.2  # Cisco Catalyst
-  ping -c 4 192.168.1.100 # Trendnet PoE Switch
-  ping -c 4 192.168.1.10  # Hikvision Camera 1
-  ping -c 4 192.168.1.11  # Hikvision Camera 2
-  ```
+#### **Enable EPEL & RPM Fusion Repositories**
 
-If all devices respond, networking is configured correctly.
+```bash
+sudo dnf install -y \
+https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+
+sudo dnf install -y \
+https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-9.noarch.rpm
+```
+
+#### **Install FFmpeg**
+
+```bash
+sudo dnf install -y ffmpeg ffmpeg-devel
+```
+
+#### **Verify Installation**
+
+```bash
+ffmpeg -version
+```
+
+---
+
+### **Step 8: Clone and Install Your Application**
+
+```bash
+git clone https://github.com/yourrepo/restaurant-app.git
+cd restaurant-app
+```
+
+#### **Install Backend Dependencies**
+
+```bash
+cd backend
+yarn install
+```
+
+#### **Install Frontend Dependencies**
+
+```bash
+cd ../frontend
+yarn install
+```
+
+#### **Install Tabletoppos Dependencies**
+
+```bash
+cd ../tabletoppos
+yarn install
+```
+
+---
+
+### **Step 9: Run the Backend**
+
+```bash
+cd ../backend
+yarn dev
+```
+
+---
+
+### **Step 10: Run the Frontend**
+
+```bash
+cd ../frontend
+yarn start
+```
+
+---
+
+### **Step 10: Run the Table Top POS**
+
+```bash
+cd ../tabletoppos
+yarn start
+```
+
+---
+
+## 🔧 Fixing "undefined symbol: mpg123_param2" in FFmpeg on RHEL 9
+
+If you encounter the error:
+
+```bash
+ffmpeg: symbol lookup error: ffmpeg: undefined symbol: mpg123_param2
+```
+
+It means that FFmpeg is having issues due to a missing or incompatible version of `mpg123`. Follow these steps to resolve it.
+
+### **🔍 Step 1: Check If `mpg123` is Installed**
+
+```bash
+rpm -q mpg123
+```
+
+If it's **not installed**, continue to the next step.
+
+---
+
+### **🛠 Step 2: Install or Reinstall `mpg123`**
+
+```bash
+sudo dnf install -y mpg123
+sudo dnf reinstall -y mpg123
+```
+
+Verify installation:
+
+```bash
+rpm -q mpg123
+```
+
+Expected output:
+
+```
+mpg123-1.29.3-1.el9.x86_64
+```
+
+---
+
+### **🔄 Step 3: Ensure All FFmpeg Dependencies Are Up to Date**
+
+```bash
+sudo dnf reinstall -y ffmpeg ffmpeg-devel mpg123
+```
+
+---
+
+### **🔎 Step 4: Verify Libraries**
+
+```bash
+ldconfig -p | grep mpg123
+```
+
+If no output appears, force a library update:
+
+```bash
+sudo ldconfig
+```
+
+---
+
+### **🚀 Step 5: Test FFmpeg**
+
+```bash
+ffmpeg -version
+```
+
+If no errors appear, FFmpeg is now working correctly!
+
+---
 
 ### **Installing Nodemon**
 
@@ -287,83 +446,6 @@ sudo ./rollback.sh
 ```
 
 This will **remove MongoDB, Node.js, and project files** and reset the network settings. -->
-
-## **Installing FFmpeg on RHEL 9**
-
-To install **FFmpeg** on **Red Hat Enterprise Linux (RHEL 9)**, follow these steps to **enable the necessary repositories** and **resolve dependencies**.
-
-### **1. Register the System**
-
-Ensure your system is registered to access Red Hat repositories:
-
-```sh
-sudo subscription-manager register --auto-attach
-```
-
-Verify the registration:
-
-```sh
-sudo subscription-manager status
-```
-
-If Simple Content Access (SCA) is enabled, you can proceed without manually attaching a subscription.
-
-### **2. Enable Required Repositories**
-
-FFmpeg is not included in the default RHEL repositories. Enable the following:
-
-#### ✅ **Enable Red Hat Base Repositories**
-
-```sh
-sudo subscription-manager repos --enable=rhel-9-for-x86_64-baseos-rpms
-sudo subscription-manager repos --enable=rhel-9-for-x86_64-appstream-rpms
-sudo subscription-manager repos --enable=codeready-builder-for-rhel-9-x86_64-rpms
-```
-
-#### ✅ **Enable RPM Fusion (Provides FFmpeg)**
-
-```sh
-sudo dnf install -y \
-https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-9.noarch.rpm
-```
-
-#### ✅ **Enable EPEL (Provides Additional Dependencies)**
-
-```sh
-sudo dnf install -y \
-https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
-```
-
-### **3. Refresh Package Metadata**
-
-Once repositories are enabled, refresh the package list:
-
-```sh
-sudo dnf clean all
-sudo dnf makecache
-```
-
-### **4. Install FFmpeg**
-
-Now that all required repositories are active, install FFmpeg:
-
-```sh
-sudo dnf install -y ffmpeg
-```
-
-### **5. Verify Installation**
-
-Check that FFmpeg is installed successfully:
-
-```sh
-ffmpeg -version
-```
-
-Expected output:
-
-```
-ffmpeg version 5.x.x ...
-```
 
 ### **✅ Summary**
 
