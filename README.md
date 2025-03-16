@@ -288,6 +288,95 @@ sudo ./rollback.sh
 
 This will **remove MongoDB, Node.js, and project files** and reset the network settings. -->
 
+## **Installing FFmpeg on RHEL 9**
+
+To install **FFmpeg** on **Red Hat Enterprise Linux (RHEL 9)**, follow these steps to **enable the necessary repositories** and **resolve dependencies**.
+
+### **1. Register the System**
+
+Ensure your system is registered to access Red Hat repositories:
+
+```sh
+sudo subscription-manager register --auto-attach
+```
+
+Verify the registration:
+
+```sh
+sudo subscription-manager status
+```
+
+If Simple Content Access (SCA) is enabled, you can proceed without manually attaching a subscription.
+
+### **2. Enable Required Repositories**
+
+FFmpeg is not included in the default RHEL repositories. Enable the following:
+
+#### ✅ **Enable Red Hat Base Repositories**
+
+```sh
+sudo subscription-manager repos --enable=rhel-9-for-x86_64-baseos-rpms
+sudo subscription-manager repos --enable=rhel-9-for-x86_64-appstream-rpms
+sudo subscription-manager repos --enable=codeready-builder-for-rhel-9-x86_64-rpms
+```
+
+#### ✅ **Enable RPM Fusion (Provides FFmpeg)**
+
+```sh
+sudo dnf install -y \
+https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-9.noarch.rpm
+```
+
+#### ✅ **Enable EPEL (Provides Additional Dependencies)**
+
+```sh
+sudo dnf install -y \
+https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+```
+
+### **3. Refresh Package Metadata**
+
+Once repositories are enabled, refresh the package list:
+
+```sh
+sudo dnf clean all
+sudo dnf makecache
+```
+
+### **4. Install FFmpeg**
+
+Now that all required repositories are active, install FFmpeg:
+
+```sh
+sudo dnf install -y ffmpeg
+```
+
+### **5. Verify Installation**
+
+Check that FFmpeg is installed successfully:
+
+```sh
+ffmpeg -version
+```
+
+Expected output:
+
+```
+ffmpeg version 5.x.x ...
+```
+
+### **✅ Summary**
+
+- **Register the system** (`subscription-manager register`)
+- **Enable RHEL Base Repositories**
+- **Enable RPM Fusion for FFmpeg**
+- **Enable EPEL for additional dependencies**
+- **Refresh and install FFmpeg**
+
+This process ensures **all dependencies are resolved automatically**.
+
+🚀 **Now FFmpeg is fully installed and ready to use!**
+
 ## Future Improvements
 
 - **Replace HLS with WebRTC or RTMP** for real-time video streaming.
