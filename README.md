@@ -275,7 +275,27 @@ yarn start
 
 ---
 
-## 🔧 Fixing "undefined symbol: mpg123_param2" in FFmpeg on RHEL 9
+### **Step 10: Rename Image Files to Ensure Compatibility**
+
+There is a small bug with the files for burger.jpg, fries.jpg, and shakes.jpg. Run these commands so their images appear correctly in the
+
+```bash
+# Rename images in TableTopPOS
+cd MERN_Restaurant_App/tabletoppos/assets/images/
+mv burger.JPG burger.jpg
+mv fries.JPG fries.jpg
+mv shake.JPG shake.jpg
+
+# Rename images in Frontend
+cd ../../frontend/public/images/
+mv burger.JPG burger.jpg
+mv fries.JPG fries.jpg
+mv shake.JPG shake.jpg
+```
+
+---
+
+## 🔧 **Fixing "undefined symbol: mpg123_param2" in FFmpeg**
 
 If you encounter the error:
 
@@ -348,7 +368,7 @@ If no errors appear, FFmpeg is now working correctly!
 
 ---
 
-### **Installing Nodemon**
+## **Installing Nodemon**
 
 `nodemon` is required for development to automatically restart the backend server when code changes.
 
