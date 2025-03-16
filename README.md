@@ -467,18 +467,6 @@ sudo ./rollback.sh
 
 This will **remove MongoDB, Node.js, and project files** and reset the network settings. -->
 
-### **✅ Summary**
-
-- **Register the system** (`subscription-manager register`)
-- **Enable RHEL Base Repositories**
-- **Enable RPM Fusion for FFmpeg**
-- **Enable EPEL for additional dependencies**
-- **Refresh and install FFmpeg**
-
-This process ensures **all dependencies are resolved automatically**.
-
-🚀 **Now FFmpeg is fully installed and ready to use!**
-
 ## Future Improvements
 
 - **Replace HLS with WebRTC or RTMP** for real-time video streaming.
