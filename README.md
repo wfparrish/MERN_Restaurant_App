@@ -293,7 +293,52 @@ mv fries.JPG fries.jpg
 mv shake.JPG shake.jpg
 ```
 
----
+### **Step 11: Configure the `.env` File in Backend**
+
+Before running the application, ensure your `.env` file is properly set up.
+
+```bash
+# Create the .env file in the backend folder
+nano MERN_Restaurant_App/backend/.env
+```
+
+```ini
+# Add the following environment variables inside the .env file
+MONGO_URI=mongodb://127.0.0.1:27017/mydatabase
+PORT=5000
+CAMERA_URL_1=rtsp://admin:%23Camera1@192.168.1.10:554/Streaming/Channels/101
+CAMERA_URL_2=rtsp://admin:%23Camera2@192.168.1.11:554/Streaming/Channels/101
+```
+
+Save the file (**CTRL+X**, then **Y**, then **ENTER**).
+
+### **This ensures:**
+
+- **MongoDB connects properly** using `MONGO_URI`.
+- **Backend listens on port 5000**.
+- **RTSP Camera URLs are configured correctly**.
+
+## **Step 12: Start the Application**
+
+Once everything is installed correctly, follow these steps to start the services:
+
+```bash
+# Start MongoDB Server
+mongod
+
+# Start Backend (Express + Nodemon)
+cd MERN_Restaurant_App/backend
+npx yarn dev
+
+# Start Frontend (React)
+cd ../frontend
+npx yarn start
+
+# Start TableTopPOS (React Native)
+cd ../tabletoppos
+yarn start
+
+```
 
 ## 🔧 **Fixing "undefined symbol: mpg123_param2" in FFmpeg**
 
